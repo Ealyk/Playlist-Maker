@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/background_settings">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        tools:ignore="MissingConstraints"
+
+        >
+        <LinearLayout
+            android:layout_margin="@dimen/header_margin"
+            android:layout_marginEnd="52dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+>
+            <Button
+                android:layout_width="@dimen/header_buttons_weight"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/transparent"
+                tools:ignore="TouchTargetSizeCheck"
+                android:background="@android:color/transparent"
+                android:contentDescription="@string/empty_button"
+                app:icon = "@drawable/arrow_back"
+                app:iconTint = "@color/header_content_settings"
+                >
+            </Button>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/settings"
+                android:gravity="center"
+                android:textSize="@dimen/main_manu_button_size"
+                android:textColor="@color/header_content_settings"
+                />
+
+        </LinearLayout>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/content_settings_margin_start"
+            android:layout_marginTop="@dimen/content_settings_margin_height"
+            android:layout_marginBottom="@dimen/content_settings_margin_height"
+            android:text="@string/switcher_theme"
+            android:textSize="@dimen/content_settings_text"
+            android:textColor="@color/content_settings_text"
+            android:gravity="start"/>
+
+            <Switch
+                android:id="@+id/switch_theme"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginEnd="18dp"
+                android:layout_marginTop="10dp"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
+                android:checked="false"
+                />
+        </FrameLayout>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/content_settings_margin_start"
+                android:layout_marginTop="@dimen/content_settings_margin_height"
+                android:layout_marginBottom="@dimen/content_settings_margin_height"
+                android:text="@string/share"
+                android:textSize="@dimen/content_settings_text"
+                android:textColor="@color/content_settings_text"
+                android:gravity="start"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginTop="@dimen/margin_settings_image_top"
+                android:layout_marginEnd="@dimen/margin_settings_image_end"
+                android:layout_marginBottom="@dimen/margin_settings_image_end"
+                android:src="@drawable/share"
+                app:tint="@color/items_settings"
+
+                />
+        </FrameLayout>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/content_settings_margin_start"
+                android:layout_marginTop="@dimen/content_settings_margin_height"
+                android:layout_marginBottom="@dimen/content_settings_margin_height"
+                android:text="@string/support"
+                android:textSize="@dimen/content_settings_text"
+                android:textColor="@color/content_settings_text"
+                android:gravity="start"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginBottom="@dimen/margin_settings_image_end"
+                android:layout_marginEnd="@dimen/margin_settings_image_end"
+                android:layout_marginTop="@dimen/margin_settings_image_top"
+                android:src="@drawable/support"
+                app:tint="@color/items_settings" />
+        </FrameLayout>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/content_settings_margin_start"
+                android:layout_marginTop="@dimen/content_settings_margin_height"
+                android:layout_marginBottom="@dimen/content_settings_margin_height"
+                android:text="@string/agreement"
+                android:textSize="@dimen/content_settings_text"
+                android:textColor="@color/content_settings_text"
+
+                />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginBottom="@dimen/margin_settings_image_end"
+                android:layout_marginEnd="@dimen/margin_settings_image_end"
+                android:layout_marginTop="@dimen/margin_settings_image_top"
+                android:src="@drawable/arrow_forward"
+                app:tint="@color/items_settings"
+                />
+        </FrameLayout>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
