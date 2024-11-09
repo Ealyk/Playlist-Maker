@@ -82,11 +82,13 @@
         android:paddingTop="8dp"
         >
         <Button
+            android:id="@+id/button_search"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:layout_margin="@dimen/main_manu_button_radius"
             android:backgroundTint="@color/white"
+            android:foreground="?attr/selectableItemBackground"
             app:cornerRadius="@dimen/main_manu_button_radius"
             android:text="@string/search"
             android:textColor="@color/black_custom"
@@ -99,11 +101,13 @@
 
 
         <Button
+            android:id="@+id/button_media"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:layout_margin="@dimen/main_manu_button_radius"
             android:backgroundTint="@color/white"
+            android:foreground="?attr/selectableItemBackground"
             app:cornerRadius="@dimen/main_manu_button_radius"
             android:textColor="@color/black_custom"
             android:text="@string/media_library"
@@ -116,11 +120,13 @@
 
 
         <Button
+            android:id="@+id/button_settings"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:layout_margin="@dimen/main_manu_button_radius"
             android:backgroundTint="@color/white"
+            android:foreground="?attr/selectableItemBackground"
             app:cornerRadius="@dimen/main_manu_button_radius"
             android:textColor="@color/black_custom"
             android:text="@string/settings"
