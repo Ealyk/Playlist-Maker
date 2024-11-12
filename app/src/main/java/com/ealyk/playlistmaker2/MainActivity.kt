@@ -1,6 +1,7 @@
 package com.ealyk.playlistmaker2
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.os.Bundle
@@ -28,48 +29,20 @@ class MainActivity : AppCompatActivity() {
         val buttonMedia = findViewById<Button>(R.id.button_media)
         val buttonSettings = findViewById<Button>(R.id.button_settings)
         buttonSearch.setOnClickListener {
-            Toast.makeText(this@MainActivity, "Button search clicked", Toast.LENGTH_SHORT).show()
+            val searchIntent = Intent(this, SearchActivity::class.java)
+            startActivity(searchIntent)
         }
         val buttonMediaClickListener: View.OnClickListener = object : View.OnClickListener {
             override fun onClick(v: View?) {
-                Toast.makeText(this@MainActivity, "Button media clicked", Toast.LENGTH_SHORT).show()
+                val mediaIntent = Intent(this@MainActivity, MediaActivity::class.java)
+                startActivity(mediaIntent)
             }
         }
         buttonMedia.setOnClickListener(buttonMediaClickListener)
         buttonSettings.setOnClickListener {
-            Toast.makeText(this@MainActivity, "Button settings clicked", Toast.LENGTH_SHORT).show()
+            val settingsIntent = Intent(this, SettingsActivity::class.java)
+            startActivity(settingsIntent)
         }
     }
 }
-class SettingsActivity : AppCompatActivity() {
 
-
-    @SuppressLint("MissingInflatedId")
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_settings)
-
-        val themeSwitch = findViewById<Switch>(R.id.switch_theme)
-        val sharedPreferences: SharedPreferences = getSharedPreferences("themePrefs", MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
-        val isNightMode = sharedPreferences.getBoolean("NightMode", false)
-        themeSwitch.isChecked = isNightMode
-        if (isNightMode){
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-        }
-        else {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-        }
-        themeSwitch.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked){
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                editor.putBoolean("NightMode", true)
-            }
-            else {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                editor.putBoolean("NightMode", false)
-            }
-            editor.apply()
-        }
-    }
-}
