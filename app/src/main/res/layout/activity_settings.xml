@@ -6,7 +6,7 @@
     tools:context=".SettingsActivity"
     android:id="@+id/settings"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/background_settings">
+    android:background="@color/activity_background">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -24,6 +24,8 @@
             <Button
                 android:layout_width="@dimen/header_buttons_weight"
                 android:id="@+id/back_button"
+                android:elevation="0dp"
+                android:layout_gravity="start"
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/transparent"
                 tools:ignore="TouchTargetSizeCheck"
@@ -37,9 +39,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="@string/settings"
+                android:fontFamily="@font/ys_display_medium"
+                android:layout_marginStart="12dp"
                 android:gravity="center"
                 android:textSize="@dimen/main_manu_button_size"
                 android:textColor="@color/header_content_settings"
+                android:textFontWeight="500"
                 />
 
         </LinearLayout>
@@ -49,15 +54,8 @@
             android:layout_marginTop="24dp"
             >
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/content_settings_margin_start"
-            android:layout_marginTop="@dimen/content_settings_margin_height"
-            android:layout_marginBottom="@dimen/content_settings_margin_height"
             android:text="@string/switcher_theme"
-            android:textSize="@dimen/content_settings_text"
-            android:textColor="@color/content_settings_text"
-            android:gravity="start"/>
+            style="@style/SettingsTextStyle" />
 
             <Switch
                 android:id="@+id/switch_theme"
@@ -69,86 +67,60 @@
                 android:minWidth="48dp"
                 android:minHeight="48dp"
                 android:checked="false"
+                android:thumbTint="@color/thumb_tint"
+                android:trackTint="@color/track_tint"
                 />
         </FrameLayout>
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:id="@+id/share"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
             >
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/content_settings_margin_start"
-                android:layout_marginTop="@dimen/content_settings_margin_height"
-                android:layout_marginBottom="@dimen/content_settings_margin_height"
-                android:text="@string/share"
-                android:textSize="@dimen/content_settings_text"
-                android:textColor="@color/content_settings_text"
-                android:gravity="start"/>
+                style="@style/SettingsTextStyle"
+                android:text="@string/share" />
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_marginTop="@dimen/margin_settings_image_top"
-                android:layout_marginEnd="@dimen/margin_settings_image_end"
-                android:layout_marginBottom="@dimen/margin_settings_image_end"
+                style="@style/ImageSettingsStyle"
                 android:src="@drawable/share"
-                app:tint="@color/items_settings"
-
                 />
         </FrameLayout>
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:id="@+id/support"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
             >
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/content_settings_margin_start"
-                android:layout_marginTop="@dimen/content_settings_margin_height"
-                android:layout_marginBottom="@dimen/content_settings_margin_height"
-                android:text="@string/support"
-                android:textSize="@dimen/content_settings_text"
-                android:textColor="@color/content_settings_text"
-                android:gravity="start"/>
+                style="@style/SettingsTextStyle"
+                android:text="@string/support"/>
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_marginBottom="@dimen/margin_settings_image_end"
-                android:layout_marginEnd="@dimen/margin_settings_image_end"
-                android:layout_marginTop="@dimen/margin_settings_image_top"
-                android:src="@drawable/support"
-                app:tint="@color/items_settings" />
+                style="@style/ImageSettingsStyle"
+                android:src="@drawable/support" />
         </FrameLayout>
         <FrameLayout
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:id="@+id/agreement"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
 
             >
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/content_settings_margin_start"
-                android:layout_marginTop="@dimen/content_settings_margin_height"
-                android:layout_marginBottom="@dimen/content_settings_margin_height"
+                style="@style/SettingsTextStyle"
                 android:text="@string/agreement"
-                android:textSize="@dimen/content_settings_text"
-                android:textColor="@color/content_settings_text"
-
                 />
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_marginBottom="@dimen/margin_settings_image_end"
-                android:layout_marginEnd="@dimen/margin_settings_image_end"
-                android:layout_marginTop="@dimen/margin_settings_image_top"
+                style="@style/ImageSettingsStyle"
                 android:src="@drawable/arrow_forward"
-                app:tint="@color/items_settings"
                 />
         </FrameLayout>
 

@@ -2,49 +2,68 @@ package com.ealyk.playlistmaker2
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.content.SharedPreferences
+import android.net.Uri
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.widget.Button
+import android.widget.FrameLayout
 import android.widget.Switch
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 
 class SettingsActivity : AppCompatActivity() {
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
-
-        val themeSwitch = findViewById<Switch>(R.id.switch_theme)
-        val sharedPreferences: SharedPreferences = getSharedPreferences("themePrefs", MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
-        val isNightMode = sharedPreferences.getBoolean("NightMode", false)
-        themeSwitch.isChecked = isNightMode
-        if (isNightMode){
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-        }
-        else {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-        }
-        themeSwitch.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked){
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                editor.putBoolean("NightMode", true)
-            }
-            else {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                editor.putBoolean("NightMode", false)
-            }
-            editor.apply()
-        }
         val backButton = findViewById<Button>(R.id.back_button)
         backButton.setOnClickListener {
-            val backButtonIntend = Intent(this, MainActivity::class.java)
-            startActivity(backButtonIntend)
+            val backIntent = Intent(this, MainActivity::class.java)
+            startActivity(backIntent)
+        }
+        val shareFrameLayout = findViewById<FrameLayout>(R.id.share)
+        shareFrameLayout.setOnClickListener {
+            val shareIntent = Intent(Intent.ACTION_SEND)
+            val shareText = arrayOf(getString(R.string.share_uri))
+            shareIntent.type = "text/plain"
+            shareIntent.putExtra(Intent.EXTRA_TEXT, shareText)
+            startActivity(Intent.createChooser(shareIntent, getString(R.string.share)))
+        }
+        val supportFrameLayout = findViewById<FrameLayout>(R.id.support)
+        supportFrameLayout.setOnClickListener {
+            val supportIntent = Intent(Intent.ACTION_SENDTO)
+            supportIntent.data = Uri.parse(getString(R.string.mailto))
+            supportIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.email)))
+            supportIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.subject_support))
+            supportIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.message_support))
+            startActivity(supportIntent)
+        }
+        val agreementFrameLayout = findViewById<FrameLayout>(R.id.agreement)
+        agreementFrameLayout.setOnClickListener {
+            val agreementIntent = Intent(Intent.ACTION_VIEW)
+            agreementIntent.data = Uri.parse(getString(R.string.agreement_uri))
+            startActivity(agreementIntent)
+
+
+        }
+        val switch = findViewById<Switch>(R.id.switch_theme)
+        fun saveThemePreference(isDarkMode: Boolean) {
+            val sharedPreferences = getSharedPreferences("theme_prefs", MODE_PRIVATE)
+            sharedPreferences.edit().putBoolean("is_dark_mode", isDarkMode).apply()
+        }
+        fun loadThemePreference(): Boolean {
+            val sharedPreferences = getSharedPreferences("theme_prefs", MODE_PRIVATE)
+            return sharedPreferences.getBoolean("is_dark_mode", false)
+        }
+        fun switchTheme(isDarkMode: Boolean) {
+            AppCompatDelegate.setDefaultNightMode(
+                if (isDarkMode) AppCompatDelegate.MODE_NIGHT_YES
+                else AppCompatDelegate.MODE_NIGHT_NO
+            )
+        }
+        switch.isChecked = loadThemePreference()
+        switch.setOnCheckedChangeListener { _, isChecked ->
+            switchTheme(isChecked)
+            saveThemePreference(isChecked)
         }
     }
 
