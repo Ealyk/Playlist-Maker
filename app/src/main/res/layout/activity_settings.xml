@@ -6,7 +6,8 @@
     tools:context=".SettingsActivity"
     android:id="@+id/settings"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/activity_background">
+    android:background="@color/activity_background"
+    >
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -22,29 +23,18 @@
             android:orientation="horizontal"
 >
             <Button
-                android:layout_width="@dimen/header_buttons_weight"
                 android:id="@+id/back_button"
-                android:elevation="0dp"
                 android:layout_gravity="start"
-                android:layout_height="wrap_content"
-                android:textColor="@android:color/transparent"
                 tools:ignore="TouchTargetSizeCheck"
-                android:background="@android:color/transparent"
-                android:contentDescription="@string/empty_button"
-                app:icon = "@drawable/arrow_back"
-                app:iconTint = "@color/header_content_settings"
+                style="@style/BackButtonStyle"
                 >
             </Button>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="@string/settings"
-                android:fontFamily="@font/ys_display_medium"
                 android:layout_marginStart="12dp"
-                android:gravity="center"
-                android:textSize="@dimen/main_manu_button_size"
-                android:textColor="@color/header_content_settings"
-                android:textFontWeight="500"
+                style="@style/HeaderTextStyle"
                 />
 
         </LinearLayout>

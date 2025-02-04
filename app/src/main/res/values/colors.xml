@@ -11,4 +11,6 @@
     <color name="track_tint">#E6E8EB</color>
     <color name="header_content_settings">#1A1B22</color>
     <color name="content_settings_text">#1A1B22</color>
+    <color name="search_hint">#AEAFB4</color>
+    <color name="searching_background">#E6E8EB</color>
 </resources>

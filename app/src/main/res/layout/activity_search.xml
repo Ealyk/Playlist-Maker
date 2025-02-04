@@ -1,10 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+    android:id="@+id/search_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".SearchActivity">
+    <LinearLayout
+        android:layout_margin="@dimen/header_margin"
+        android:layout_marginEnd="52dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+        <Button
+            android:id="@+id/back_button"
+            android:layout_gravity="start"
+            tools:ignore="TouchTargetSizeCheck"
+            style="@style/BackButtonStyle"
+            >
+        </Button>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/search"
+            android:layout_marginStart="12dp"
+            style="@style/HeaderTextStyle"
+            />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        android:background="@color/searching_background"
+        android:orientation="horizontal"
+
+
+
+        >
+        <EditText
+
+            android:id="@+id/searching"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="12dp"
+            android:hint="@string/search"
+            android:importantForAutofill="no"
+            android:minHeight="48dp"
+            android:maxLines="1"
+            android:inputType="text"
+            android:background="@android:color/transparent"
+            android:drawableStart="@drawable/search"
+            android:drawableTint="@color/search_hint"
+            android:drawablePadding="16dp"
+            android:textColorHint="@color/search_hint"
+            android:textSize="@dimen/content_settings_text"
+            android:fontFamily="@font/ys_display_regular"
+            android:focusable="true"
+            tools:ignore="VisualLintTextFieldSize" />
+
+        <FrameLayout
+            android:id="@+id/clear_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:clickable="true"
+            android:padding="12dp"
+            android:visibility="gone"
+            tools:ignore="SpeakableTextPresentCheck"
+            >
+
+            <ImageView
+                android:id="@+id/icon_clear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/clear_icon"
+                app:tint="@color/search_hint" />
+        </FrameLayout>
+
+    </LinearLayout>
+
+
+</LinearLayout>
+

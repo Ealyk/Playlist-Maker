@@ -17,8 +17,7 @@ class SettingsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_settings)
         val backButton = findViewById<Button>(R.id.back_button)
         backButton.setOnClickListener {
-            val backIntent = Intent(this, MainActivity::class.java)
-            startActivity(backIntent)
+            finish()
         }
         val shareFrameLayout = findViewById<FrameLayout>(R.id.share)
         shareFrameLayout.setOnClickListener {
@@ -31,7 +30,7 @@ class SettingsActivity : AppCompatActivity() {
         val supportFrameLayout = findViewById<FrameLayout>(R.id.support)
         supportFrameLayout.setOnClickListener {
             val supportIntent = Intent(Intent.ACTION_SENDTO)
-            supportIntent.data = Uri.parse(getString(R.string.mailto))
+            supportIntent.data = Uri.parse("mailto:")
             supportIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.email)))
             supportIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.subject_support))
             supportIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.message_support))
@@ -67,4 +66,8 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
+    }
 }
