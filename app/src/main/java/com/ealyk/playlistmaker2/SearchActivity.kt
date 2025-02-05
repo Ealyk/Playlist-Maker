@@ -1,12 +1,14 @@
 package com.ealyk.playlistmaker2
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.FrameLayout
@@ -21,7 +23,6 @@ class SearchActivity : AppCompatActivity() {
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContentView(R.layout.activity_search)
 
         Log.d("MySerchLog", "SearchActivity Создан")
@@ -29,6 +30,7 @@ class SearchActivity : AppCompatActivity() {
         val backButton = findViewById<Button>(R.id.back_button)
         val editTextSearch = findViewById<EditText>(R.id.searching)
         val clearButton = findViewById<FrameLayout>(R.id.clear_button)
+        val rootLayout = findViewById<LinearLayout>(R.id.search_layout)
 
         backButton.setOnClickListener {
             finish()
@@ -37,6 +39,12 @@ class SearchActivity : AppCompatActivity() {
         clearButton.setOnClickListener {
             editTextSearch.setText("")
             Log.d("MySerchLog", "Нажали крестик")
+        }
+
+
+        rootLayout.setOnClickListener {
+            val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+            inputMethodManager?.hideSoftInputFromWindow(rootLayout.windowToken, 0)
         }
 
         val textWatcher = object : TextWatcher {
