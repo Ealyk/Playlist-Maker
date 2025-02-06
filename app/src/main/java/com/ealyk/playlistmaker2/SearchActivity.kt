@@ -20,6 +20,9 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
 class SearchActivity : AppCompatActivity() {
+
+    private var savedEditText = DEF_TEXT
+
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,6 +34,12 @@ class SearchActivity : AppCompatActivity() {
         val editTextSearch = findViewById<EditText>(R.id.searching)
         val clearButton = findViewById<FrameLayout>(R.id.clear_button)
         val rootLayout = findViewById<LinearLayout>(R.id.search_layout)
+
+        if (savedInstanceState != null) {
+            savedEditText = savedInstanceState.getString(EDITABLE_TEXT, DEF_TEXT)
+            editTextSearch.setText(savedEditText)
+
+        }
 
         backButton.setOnClickListener {
             finish()
@@ -60,6 +69,7 @@ class SearchActivity : AppCompatActivity() {
 
             override fun afterTextChanged(s: Editable?) {
 
+                 savedEditText = s.toString()
             }
 
         }
@@ -79,5 +89,14 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(EDITABLE_TEXT, savedEditText)
+    }
+
+    companion object {
+        const val EDITABLE_TEXT = "EDITABLE_TEXT"
+        const val DEF_TEXT = ""
+    }
 
 }

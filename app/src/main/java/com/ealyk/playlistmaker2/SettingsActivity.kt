@@ -45,6 +45,7 @@ class SettingsActivity : AppCompatActivity() {
 
         }
         val switch = findViewById<Switch>(R.id.switch_theme)
+
         fun saveThemePreference(isDarkMode: Boolean) {
             val sharedPreferences = getSharedPreferences("theme_prefs", MODE_PRIVATE)
             sharedPreferences.edit().putBoolean("is_dark_mode", isDarkMode).apply()
