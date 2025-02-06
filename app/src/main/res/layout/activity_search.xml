@@ -62,6 +62,7 @@
             android:textColor="@color/black_custom"
             android:textColorHint="@color/search_hint"
             android:textSize="@dimen/content_settings_text"
+            android:textFontWeight="400"
             android:fontFamily="@font/ys_display_regular"
             android:focusable="true"
             tools:ignore="VisualLintTextFieldSize" />

@@ -23,6 +23,7 @@ class SearchActivity : AppCompatActivity() {
 
     private var savedEditText = DEF_TEXT
 
+
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,14 +48,12 @@ class SearchActivity : AppCompatActivity() {
 
         clearButton.setOnClickListener {
             editTextSearch.setText("")
+            val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+            inputMethodManager?.hideSoftInputFromWindow(rootLayout.windowToken, 0)
             Log.d("MySerchLog", "Нажали крестик")
         }
 
 
-        rootLayout.setOnClickListener {
-            val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-            inputMethodManager?.hideSoftInputFromWindow(rootLayout.windowToken, 0)
-        }
 
         val textWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -77,21 +76,44 @@ class SearchActivity : AppCompatActivity() {
 
     }
 
-    private fun clearButtonVisibility(s:CharSequence?): Int {
-        return if (s.isNullOrEmpty()) {
-            Log.d("MySerchLog", "крестик не виден")
-            View.GONE
-        }
-        else{
-            Log.d("MySerchLog", "крестик виден")
-            View.VISIBLE
+    override fun onStart() {
+        super.onStart()
+        Log.d("MySerchLog", "onStart")
+    }
 
-        }
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        savedEditText = savedInstanceState.getString(EDITABLE_TEXT, DEF_TEXT)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(EDITABLE_TEXT, savedEditText)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.d("MySerchLog", "onPause")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d("MySerchLog", "onStop")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("MySerchLog", "onDestroy")
+    }
+
+    private fun clearButtonVisibility(s:CharSequence?): Int {
+        return if (s.isNullOrEmpty()) {
+            View.GONE
+        }
+        else{
+            View.VISIBLE
+
+        }
     }
 
     companion object {
