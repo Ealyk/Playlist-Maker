@@ -57,7 +57,7 @@
                 android:layout_marginTop="10dp"
                 android:minWidth="48dp"
                 android:minHeight="48dp"
-                android:checked="true"
+                android:checked="false"
                 android:thumbTint="@color/thumb_tint"
                 android:trackTint="@color/track_tint"
                 tools:ignore="UseSwitchCompatOrMaterialXml" />
