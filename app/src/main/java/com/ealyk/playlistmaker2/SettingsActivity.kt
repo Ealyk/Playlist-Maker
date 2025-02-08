@@ -11,10 +11,37 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 
 class SettingsActivity : AppCompatActivity() {
-    @SuppressLint("MissingInflatedId")
+
+
+
+    @SuppressLint("MissingInflatedId", "UseSwitchCompatOrMaterialCode")
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
+
+        val switch = findViewById<Switch>(R.id.switch_theme)
+
+        fun saveThemePreference(isDarkMode: Boolean) {
+            val sharedPreferences = getSharedPreferences(THEME_PREFS, MODE_PRIVATE)
+            sharedPreferences.edit().putBoolean(IS_DARK_MODE, isDarkMode).apply()
+        }
+        fun loadThemePreference(): Boolean {
+            val sharedPreferences = getSharedPreferences(THEME_PREFS, MODE_PRIVATE)
+            return sharedPreferences.getBoolean(IS_DARK_MODE, DEF_IS_DARK)
+        }
+        fun switchTheme(isDarkMode: Boolean) {
+            AppCompatDelegate.setDefaultNightMode(
+                if (isDarkMode) AppCompatDelegate.MODE_NIGHT_YES
+                else AppCompatDelegate.MODE_NIGHT_NO
+            )
+        }
+        switch.isChecked = loadThemePreference()
+        switch.setOnCheckedChangeListener { _, isChecked ->
+            switchTheme(isChecked)
+            saveThemePreference(isChecked)
+        }
+
         val backButton = findViewById<Button>(R.id.back_button)
         backButton.setOnClickListener {
             finish()
@@ -44,31 +71,18 @@ class SettingsActivity : AppCompatActivity() {
 
 
         }
-        val switch = findViewById<Switch>(R.id.switch_theme)
-
-        fun saveThemePreference(isDarkMode: Boolean) {
-            val sharedPreferences = getSharedPreferences("theme_prefs", MODE_PRIVATE)
-            sharedPreferences.edit().putBoolean("is_dark_mode", isDarkMode).apply()
-        }
-        fun loadThemePreference(): Boolean {
-            val sharedPreferences = getSharedPreferences("theme_prefs", MODE_PRIVATE)
-            return sharedPreferences.getBoolean("is_dark_mode", false)
-        }
-        fun switchTheme(isDarkMode: Boolean) {
-            AppCompatDelegate.setDefaultNightMode(
-                if (isDarkMode) AppCompatDelegate.MODE_NIGHT_YES
-                else AppCompatDelegate.MODE_NIGHT_NO
-            )
-        }
-        switch.isChecked = loadThemePreference()
-        switch.setOnCheckedChangeListener { _, isChecked ->
-            switchTheme(isChecked)
-            saveThemePreference(isChecked)
-        }
     }
+
+
 
     override fun onBackPressed() {
         super.onBackPressed()
         finish()
+    }
+
+    companion object{
+        private val THEME_PREFS = "theme_prefs"
+        private val IS_DARK_MODE = "is_dark_mode"
+        private val DEF_IS_DARK = false
     }
 }

@@ -29,7 +29,6 @@ class SearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
-        Log.d("MySerchLog", "SearchActivity Создан")
 
         val backButton = findViewById<Button>(R.id.back_button)
         val editTextSearch = findViewById<EditText>(R.id.searching)
@@ -50,7 +49,6 @@ class SearchActivity : AppCompatActivity() {
             editTextSearch.setText("")
             val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
             inputMethodManager?.hideSoftInputFromWindow(rootLayout.windowToken, 0)
-            Log.d("MySerchLog", "Нажали крестик")
         }
 
 
@@ -63,7 +61,6 @@ class SearchActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
 
                 clearButton.visibility = clearButtonVisibility(s ?: "")
-                Log.d("MySerchLog", "Видимость крестика")
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -76,11 +73,6 @@ class SearchActivity : AppCompatActivity() {
 
     }
 
-    override fun onStart() {
-        super.onStart()
-        Log.d("MySerchLog", "onStart")
-    }
-
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         savedEditText = savedInstanceState.getString(EDITABLE_TEXT, DEF_TEXT)
@@ -89,21 +81,6 @@ class SearchActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(EDITABLE_TEXT, savedEditText)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        Log.d("MySerchLog", "onPause")
-    }
-
-    override fun onStop() {
-        super.onStop()
-        Log.d("MySerchLog", "onStop")
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.d("MySerchLog", "onDestroy")
     }
 
     private fun clearButtonVisibility(s:CharSequence?): Int {
@@ -117,8 +94,8 @@ class SearchActivity : AppCompatActivity() {
     }
 
     companion object {
-        const val EDITABLE_TEXT = "EDITABLE_TEXT"
-        const val DEF_TEXT = ""
+        private const val EDITABLE_TEXT = "EDITABLE_TEXT"
+        private const val DEF_TEXT = ""
     }
 
 }

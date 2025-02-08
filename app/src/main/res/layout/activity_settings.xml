@@ -51,15 +51,16 @@
                 android:id="@+id/switch_theme"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:switchMinWidth="35dp"
                 android:layout_gravity="end"
                 android:layout_marginEnd="18dp"
                 android:layout_marginTop="10dp"
                 android:minWidth="48dp"
                 android:minHeight="48dp"
-                android:checked="false"
+                android:checked="true"
                 android:thumbTint="@color/thumb_tint"
                 android:trackTint="@color/track_tint"
-                />
+                tools:ignore="UseSwitchCompatOrMaterialXml" />
         </FrameLayout>
         <FrameLayout
             android:layout_width="match_parent"
@@ -92,7 +93,7 @@
 
             <ImageView
                 style="@style/ImageSettingsStyle"
-                android:src="@drawable/support" />
+                android:src="@drawable/group" />
         </FrameLayout>
         <FrameLayout
             android:background="?attr/selectableItemBackground"
