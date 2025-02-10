@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="main_activity_background"/>
+    <attr name="settings_activity_textColor"/>
+    <attr name="settings_activity_imageTint"/>
+</resources>

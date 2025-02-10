@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 
     <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/main"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/background"
+    android:background="@color/activity_main_background"
+    tools:context=".MainActivity"
         >
     <LinearLayout
         android:layout_width="match_parent"
@@ -21,14 +22,12 @@
             android:layout_height="wrap_content"
 
             >
+
             <Button
+                style="@style/EmptyButtonStyle"
                 android:layout_width="@dimen/header_buttons_weight"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/transparent"
-                tools:ignore="TouchTargetSizeCheck"
-                android:background="@android:color/transparent"
-                android:contentDescription="@string/empty_button"
-                />
+                tools:ignore="TouchTargetSizeCheck,TextContrastCheck" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -40,6 +39,8 @@
                     android:layout_height="wrap_content"
                     android:text="@string/app_name"
                     android:textColor="@color/white"
+                    android:fontFamily="@font/ys_display_medium"
+                    android:textFontWeight="500"
                     android:textSize="@dimen/main_manu_button_size"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="12dp"
@@ -48,28 +49,24 @@
 
 
                 <Button
+                    style="@style/EmptyButtonStyle"
                     android:layout_width="12dp"
                     android:layout_height="16dp"
                     android:layout_marginStart="21dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="130dp"
                     android:layout_marginBottom="16dp"
-                    android:textColor="@android:color/transparent"
-                    android:backgroundTint="@android:color/transparent"
-                    android:contentDescription="@string/empty_button"
-                    tools:ignore="TouchTargetSizeCheck" />
+                    tools:ignore="TouchTargetSizeCheck,TextContrastCheck" />
 
             </LinearLayout>
 
             <Button
+                style="@style/EmptyButtonStyle"
                 android:layout_width="@dimen/header_buttons_weight"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/transparent"
-                tools:ignore="TouchTargetSizeCheck"
-                android:background="@android:color/transparent"
-                android:contentDescription="@string/empty_button"
                 android:layout_gravity="end"
-                />
+                android:background="@android:color/transparent"
+                tools:ignore="TouchTargetSizeCheck,TextContrastCheck" />
 
         </FrameLayout>
     </LinearLayout>
@@ -78,62 +75,30 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:paddingBottom="8dp"
+        android:paddingBottom="12dp"
         android:paddingTop="8dp"
         >
         <Button
             android:id="@+id/button_search"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_margin="@dimen/main_manu_button_radius"
-            android:backgroundTint="@color/white"
-            android:foreground="?attr/selectableItemBackground"
-            app:cornerRadius="@dimen/main_manu_button_radius"
             android:text="@string/search"
-            android:textColor="@color/black_custom"
-            android:textSize="@dimen/main_manu_button_size"
-            android:textAllCaps="false"
+            style="@style/MainMenuButtonStyle"
             app:icon="@drawable/search"
-            app:iconTint="@color/black_custom"
             app:iconGravity="textStart"
              />
 
 
         <Button
             android:id="@+id/button_media"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_margin="@dimen/main_manu_button_radius"
-            android:backgroundTint="@color/white"
-            android:foreground="?attr/selectableItemBackground"
-            app:cornerRadius="@dimen/main_manu_button_radius"
-            android:textColor="@color/black_custom"
+            style="@style/MainMenuButtonStyle"
             android:text="@string/media_library"
-            android:textSize="@dimen/main_manu_button_size"
-            android:textAllCaps="false"
             app:icon="@drawable/media_library"
-            app:iconTint="@color/black_custom"
             app:iconGravity="textStart"/>
-
-
 
         <Button
             android:id="@+id/button_settings"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_margin="@dimen/main_manu_button_radius"
-            android:backgroundTint="@color/white"
-            android:foreground="?attr/selectableItemBackground"
-            app:cornerRadius="@dimen/main_manu_button_radius"
-            android:textColor="@color/black_custom"
+            style="@style/MainMenuButtonStyle"
             android:text="@string/settings"
-            android:textSize="@dimen/main_manu_button_size"
-            android:textAllCaps="false"
             app:icon="@drawable/settings"
-            app:iconTint="@color/black_custom"
             app:iconGravity="textStart"
             />
     </LinearLayout>

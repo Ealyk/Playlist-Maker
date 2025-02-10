@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="background">#1A1B22</color>
-    <color name="background_settings">#1A1B22</color>
-    <color name="white">#FFFFFFFF</color>
-    <color name="track">#9FBBF3</color>
-    <color name="header_content_settings">#FFFFFFFF</color>
-    <color name="content_settings_text">#FFFFFFFF</color>
+
     <color name="black_custom">#1A1B22</color>
     <color name="black_system">#000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="dark_blue">#3772E7</color>
+
+    <color name="activity_main_background">#1A1B22</color>
+    <color name="track_tint">#9FBBF3</color>
+    <color name="header_content_settings">#FFFFFFFF</color>
+    <color name="content_settings_text">#FFFFFFFF</color>
     <color name="items_settings">#FFFFFFFF</color>
+    <color name="activity_background">#1A1B22</color>
+    <color name="thumb_tint">#3772E7</color>
+    <color name="search_hint">#1A1B22</color>
+    <color name="searching_background">#FFFFFFFF</color>
 </resources>
