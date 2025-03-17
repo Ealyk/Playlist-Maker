@@ -99,49 +99,56 @@ class SearchActivity : AppCompatActivity() {
         rvTrackSearch.adapter = adapter
 
         editTextSearch.setOnEditorActionListener { _, actionId, _ ->
+
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                if (editTextSearch.text.isNotEmpty()) {
-                    iTunesService.search(editTextSearch.text.toString()).enqueue(object : Callback<TrackResponse>{
-                        override fun onResponse(
-                            call: Call<TrackResponse>,
-                            response: Response<TrackResponse>
-                        ) {
-                            if (response.code() == 200) {
-                                trackList.clear()
-                                if (response.body()?.results?.isNotEmpty() == true) {
-                                    trackList.addAll(response.body()?.results!!)
-                                    adapter.notifyDataSetChanged()
-                                }
-                                if (trackList.isEmpty()) {
-                                    showEmptyState()
-                                }
-                                else showTrackList()
-                            }
-                            else {
-                                showErrorState()
-                                reloadButton.setOnClickListener {
 
-                                    recreate()
-                                }
-                            }
-                        }
+                val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+                inputMethodManager?.hideSoftInputFromWindow(rootLayout.windowToken, 0)
 
-                        override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
-                            showErrorState()
-                            reloadButton.setOnClickListener {
-
-                                recreate()
-                            }
-                        }
-
-                    })
-                }
+                performSearch(savedEditText)
                 true
-            }
-            false
+            } else false
         }
 
+        reloadButton.setOnClickListener {
+            performSearch(savedEditText)
+        }
 
+    }
+
+    private fun performSearch(query: String) {
+        if (editTextSearch.text.isNotEmpty()) {
+            iTunesService.search(editTextSearch.text.toString()).enqueue(object : Callback<TrackResponse>{
+                override fun onResponse(
+                    call: Call<TrackResponse>,
+                    response: Response<TrackResponse>
+                ) {
+                    if (response.code() == 200) {
+                        trackList.clear()
+                        if (response.body()?.results?.isNotEmpty() == true) {
+                            trackList.addAll(response.body()?.results!!)
+                            adapter.notifyDataSetChanged()
+                        }
+                        if (trackList.isEmpty()) {
+                            showEmptyState()
+                        }
+                        else showTrackList()
+                    }
+                    else {
+                        showErrorState()
+                    }
+                }
+
+                override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
+                    showErrorState()
+                    reloadButton.setOnClickListener {
+
+                        recreate()
+                    }
+                }
+
+            })
+        }
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
