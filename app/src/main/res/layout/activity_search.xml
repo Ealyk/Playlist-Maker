@@ -64,6 +64,8 @@
             android:textColorHint="@color/search_hint"
             android:textFontWeight="400"
             android:textSize="@dimen/content_settings_text"
+            android:singleLine="true"
+            android:imeOptions="actionDone"
             tools:ignore="VisualLintTextFieldSize,TouchTargetSizeCheck" />
 
         <FrameLayout
@@ -88,6 +90,78 @@
         </FrameLayout>
 
     </FrameLayout>
+    
+    <LinearLayout
+        android:id="@+id/emptyStateLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="102dp"
+        android:visibility="gone"
+        >
+        
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/empty_search"
+            android:layout_gravity="center"
+            android:scaleType="centerCrop"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            style="@style/SearchErrorTextStyle"
+            android:text="@string/nothing_founded"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/errorStateLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="102dp"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/error_search"
+            android:layout_gravity="center"
+            android:scaleType="centerCrop"/>
+        
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/communication_error"
+            style="@style/SearchErrorTextStyle"
+            />
+
+        <Button
+            android:id="@+id/reloadButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingVertical="6dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="6dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="24dp"
+            android:elevation="0dp"
+            android:backgroundTint="@color/header_content_settings"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            app:cornerRadius="54dp"
+            android:text="@string/reload_button"
+            android:textFontWeight="500"
+            android:textSize="14sp"
+            android:fontFamily="@font/ys_display_medium"
+            android:textColor="@color/activity_background"/>
+
+
+    </LinearLayout>
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerTrackSearch"
