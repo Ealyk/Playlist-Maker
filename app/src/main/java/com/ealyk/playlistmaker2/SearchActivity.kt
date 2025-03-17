@@ -25,7 +25,6 @@ class SearchActivity : AppCompatActivity() {
 
     private var savedEditText = DEF_TEXT
 
-    private val iTunesbaseUrl = "https://itunes.apple.com"
 
     private val retrofit = Retrofit.Builder()
         .baseUrl(iTunesbaseUrl)
@@ -40,6 +39,8 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var rootLayout: LinearLayout
     private lateinit var rvTrackSearch: RecyclerView
     private lateinit var reloadButton: Button
+    private lateinit var emptyStateLayout: LinearLayout
+    private lateinit var errorStateLayout: LinearLayout
 
     private val trackList = ArrayList<Track>()
 
@@ -56,6 +57,8 @@ class SearchActivity : AppCompatActivity() {
         rootLayout = findViewById(R.id.search_layout)
         rvTrackSearch = findViewById(R.id.recyclerTrackSearch)
         reloadButton = findViewById(R.id.reloadButton)
+        emptyStateLayout = findViewById(R.id.emptyStateLayout)
+        errorStateLayout = findViewById(R.id.errorStateLayout)
 
         if (savedInstanceState != null) {
             savedEditText = savedInstanceState.getString(EDITABLE_TEXT, DEF_TEXT)
@@ -71,7 +74,7 @@ class SearchActivity : AppCompatActivity() {
             editTextSearch.setText("")
             trackList.clear()
             adapter.notifyDataSetChanged()
-            showTrackList()
+            showTrackList(emptyStateLayout, errorStateLayout, rvTrackSearch)
             val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
             inputMethodManager?.hideSoftInputFromWindow(rootLayout.windowToken, 0)
         }
@@ -123,27 +126,30 @@ class SearchActivity : AppCompatActivity() {
                     call: Call<TrackResponse>,
                     response: Response<TrackResponse>
                 ) {
+
+                    val responseBody = response.body()?.results
+
                     if (response.code() == 200) {
                         trackList.clear()
-                        if (response.body()?.results?.isNotEmpty() == true) {
-                            trackList.addAll(response.body()?.results!!)
+                        if (responseBody?.isNotEmpty() == true) {
+                            trackList.addAll(responseBody)
                             adapter.notifyDataSetChanged()
                         }
                         if (trackList.isEmpty()) {
-                            showEmptyState()
+                            showEmptyState(emptyStateLayout, errorStateLayout, rvTrackSearch)
                         }
-                        else showTrackList()
+                        else showTrackList(emptyStateLayout, errorStateLayout, rvTrackSearch)
                     }
                     else {
-                        showErrorState()
+                        showErrorState(emptyStateLayout, errorStateLayout, rvTrackSearch)
                     }
                 }
 
                 override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
-                    showErrorState()
+                    showErrorState(emptyStateLayout, errorStateLayout, rvTrackSearch)
                     reloadButton.setOnClickListener {
 
-                        recreate()
+                        performSearch(query)
                     }
                 }
 
@@ -171,25 +177,35 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    private fun showEmptyState() {
-        findViewById<LinearLayout>(R.id.emptyStateLayout).visibility = View.VISIBLE
-        findViewById<LinearLayout>(R.id.errorStateLayout).visibility = View.GONE
-        findViewById<RecyclerView>(R.id.recyclerTrackSearch).visibility = View.GONE
+    private fun showEmptyState(
+        emptyStateLayout: LinearLayout,
+        errorStateLayout: LinearLayout,
+        rvTrackSearch: RecyclerView) {
+        emptyStateLayout.visibility = View.VISIBLE
+        errorStateLayout.visibility = View.GONE
+        rvTrackSearch.visibility = View.GONE
     }
 
-    private fun showErrorState() {
-        findViewById<LinearLayout>(R.id.emptyStateLayout).visibility = View.GONE
-        findViewById<LinearLayout>(R.id.errorStateLayout).visibility = View.VISIBLE
-        findViewById<RecyclerView>(R.id.recyclerTrackSearch).visibility = View.GONE
+    private fun showErrorState(
+        emptyStateLayout: LinearLayout,
+        errorStateLayout: LinearLayout,
+        rvTrackSearch: RecyclerView) {
+        emptyStateLayout.visibility = View.GONE
+        errorStateLayout.visibility = View.VISIBLE
+        rvTrackSearch.visibility = View.GONE
     }
 
-    private fun showTrackList() {
-        findViewById<LinearLayout>(R.id.emptyStateLayout).visibility = View.GONE
-        findViewById<LinearLayout>(R.id.errorStateLayout).visibility = View.GONE
-        findViewById<RecyclerView>(R.id.recyclerTrackSearch).visibility = View.VISIBLE
+    private fun showTrackList(
+        emptyStateLayout: LinearLayout,
+        errorStateLayout: LinearLayout,
+        rvTrackSearch: RecyclerView) {
+        emptyStateLayout.visibility = View.GONE
+        errorStateLayout.visibility = View.GONE
+        rvTrackSearch.visibility = View.VISIBLE
     }
 
     companion object {
+        private const val iTunesbaseUrl = "https://itunes.apple.com"
         private const val EDITABLE_TEXT = "EDITABLE_TEXT"
         private const val DEF_TEXT = ""
     }
