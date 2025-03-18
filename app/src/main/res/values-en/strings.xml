@@ -9,4 +9,8 @@
     <string name="agreement">User agreement</string>
     <string name="subject_support">Message to the developers of the Playlist Maker app</string>
     <string name="message_support">\"Thanks to the developers for the cool app!\"</string>
+    <string name="nothing_founded">Nothing founded</string>
+    <string name="communication_error">Communication problems\n\nThe upload failed. Please check\nyour internet connection</string>
+    <string name="reload_button">Reload</string>
+
 </resources>
