@@ -4,15 +4,18 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.Switch
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import com.google.android.material.switchmaterial.SwitchMaterial
+
 
 class SettingsActivity : AppCompatActivity() {
 
-
+    private lateinit var switch: SwitchMaterial
 
     @SuppressLint("MissingInflatedId", "UseSwitchCompatOrMaterialCode")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,27 +23,17 @@ class SettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
-        val switch = findViewById<Switch>(R.id.switch_theme)
+        switch = findViewById(R.id.switch_theme)
 
-        fun saveThemePreference(isDarkMode: Boolean) {
-            val sharedPreferences = getSharedPreferences(THEME_PREFS, MODE_PRIVATE)
-            sharedPreferences.edit().putBoolean(IS_DARK_MODE, isDarkMode).apply()
+        val sharedPreferences = getSharedPreferences(App.SHARED_PREF_KEY, MODE_PRIVATE)
+
+        switch.isChecked = sharedPreferences.getBoolean(App.SWITCH_KEY, App.DEF_IS_DARK)
+
+        switch.setOnCheckedChangeListener { switcher, checked ->
+            (applicationContext as App).switchTheme(checked)
+            sharedPreferences.edit().putBoolean(App.SWITCH_KEY, checked).apply()
         }
-        fun loadThemePreference(): Boolean {
-            val sharedPreferences = getSharedPreferences(THEME_PREFS, MODE_PRIVATE)
-            return sharedPreferences.getBoolean(IS_DARK_MODE, DEF_IS_DARK)
-        }
-        fun switchTheme(isDarkMode: Boolean) {
-            AppCompatDelegate.setDefaultNightMode(
-                if (isDarkMode) AppCompatDelegate.MODE_NIGHT_YES
-                else AppCompatDelegate.MODE_NIGHT_NO
-            )
-        }
-        switch.isChecked = loadThemePreference()
-        switch.setOnCheckedChangeListener { _, isChecked ->
-            switchTheme(isChecked)
-            saveThemePreference(isChecked)
-        }
+
 
         val backButton = findViewById<Button>(R.id.back_button)
         backButton.setOnClickListener {
@@ -80,9 +73,6 @@ class SettingsActivity : AppCompatActivity() {
         finish()
     }
 
-    companion object{
-        private val THEME_PREFS = "theme_prefs"
-        private val IS_DARK_MODE = "is_dark_mode"
-        private val DEF_IS_DARK = false
-    }
+
+
 }

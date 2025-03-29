@@ -38,30 +38,23 @@
                 />
 
         </LinearLayout>
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            >
-        <TextView
-            android:text="@string/switcher_theme"
-            style="@style/SettingsTextStyle" />
 
-            <Switch
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
                 android:id="@+id/switch_theme"
-                android:layout_width="wrap_content"
+                android:layout_marginHorizontal="60dp"
+                android:layout_gravity="start"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:switchMinWidth="35dp"
-                android:layout_gravity="end"
+                android:text="@string/switcher_theme"
+                style="@style/SettingsTextStyle"
                 android:layout_marginEnd="18dp"
-                android:layout_marginTop="10dp"
-                android:minWidth="48dp"
-                android:minHeight="48dp"
-                android:checked="false"
-                android:thumbTint="@color/thumb_tint"
-                android:trackTint="@color/track_tint"
-                tools:ignore="UseSwitchCompatOrMaterialXml" />
-        </FrameLayout>
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="45dp"
+                android:layout_marginBottom="0dp"
+                app:thumbTint="@color/thumb_tint"
+                app:trackTint="@color/track_tint"/>
+
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

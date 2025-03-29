@@ -2,6 +2,7 @@ package com.ealyk.playlistmaker2
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -21,10 +22,12 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 
-class SearchActivity : AppCompatActivity() {
+class SearchActivity : AppCompatActivity(), HistoryObserver {
 
     private var savedEditText = DEF_TEXT
 
+    private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var searchHistory: SearchHistory
 
     private val retrofit = Retrofit.Builder()
         .baseUrl(iTunesbaseUrl)
@@ -41,15 +44,23 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var reloadButton: Button
     private lateinit var emptyStateLayout: LinearLayout
     private lateinit var errorStateLayout: LinearLayout
+    private lateinit var historyLayout: LinearLayout
+    private lateinit var rvSearchHistory: RecyclerView
+    private lateinit var clearHistory: Button
 
     private val trackList = ArrayList<Track>()
 
-    private val adapter = TrackAdapter(trackList)
+    private lateinit var adapter: TrackAdapter
+    private lateinit var historyAdapter: HistoryAdapter
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
+
+        sharedPreferences = getSharedPreferences(App.SHARED_PREF_KEY, MODE_PRIVATE)
+        searchHistory = SearchHistory(sharedPreferences)
+
 
         backButton = findViewById(R.id.back_button)
         editTextSearch = findViewById(R.id.searching)
@@ -59,6 +70,19 @@ class SearchActivity : AppCompatActivity() {
         reloadButton = findViewById(R.id.reloadButton)
         emptyStateLayout = findViewById(R.id.emptyStateLayout)
         errorStateLayout = findViewById(R.id.errorStateLayout)
+        historyLayout = findViewById(R.id.containerHistory)
+        rvSearchHistory = findViewById(R.id.recyclerSearchHistory)
+        clearHistory = findViewById(R.id.clear_history_button)
+
+        searchHistory.addObserver(this)
+
+        val historyList = searchHistory.loadHistory().toMutableList()
+
+        adapter = TrackAdapter(trackList, searchHistory)
+        historyAdapter = HistoryAdapter(historyList)
+
+        rvSearchHistory.adapter = historyAdapter
+        rvTrackSearch.adapter = adapter
 
         if (savedInstanceState != null) {
             savedEditText = savedInstanceState.getString(EDITABLE_TEXT, DEF_TEXT)
@@ -71,15 +95,30 @@ class SearchActivity : AppCompatActivity() {
         }
 
         clearButton.setOnClickListener {
+
             editTextSearch.setText("")
             trackList.clear()
+
+            val updateHistoryList = searchHistory.loadHistory().toMutableList()
+
+            historyAdapter.updateList(updateHistoryList)
             adapter.notifyDataSetChanged()
+
             showTrackList(emptyStateLayout, errorStateLayout, rvTrackSearch)
             val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
             inputMethodManager?.hideSoftInputFromWindow(rootLayout.windowToken, 0)
         }
 
+        clearHistory.setOnClickListener {
+            searchHistory.clearHistory()
+            onHistoryUpdate(historyList)
+            historyAdapter.notifyDataSetChanged()
+        }
 
+
+        editTextSearch.setOnFocusChangeListener { view, hasFocus ->
+            historyLayout.visibility = if (hasFocus && editTextSearch.text.isEmpty()) View.VISIBLE else View.GONE
+        }
 
         val textWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -89,6 +128,11 @@ class SearchActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
 
                 clearButton.visibility = clearButtonVisibility(s ?: "")
+                historyLayout.visibility = if (editTextSearch.hasFocus() && s?.isEmpty() == true) {
+
+                    View.VISIBLE
+                }
+                else View.GONE
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -99,7 +143,7 @@ class SearchActivity : AppCompatActivity() {
         }
         editTextSearch.addTextChangedListener(textWatcher)
 
-        rvTrackSearch.adapter = adapter
+
 
         editTextSearch.setOnEditorActionListener { _, actionId, _ ->
 
@@ -202,6 +246,15 @@ class SearchActivity : AppCompatActivity() {
         emptyStateLayout.visibility = View.GONE
         errorStateLayout.visibility = View.GONE
         rvTrackSearch.visibility = View.VISIBLE
+    }
+
+    override fun onHistoryUpdate(historyList: List<Track>) {
+        historyAdapter.updateList(historyList)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        searchHistory.removeObserver(this)
     }
 
     companion object {
