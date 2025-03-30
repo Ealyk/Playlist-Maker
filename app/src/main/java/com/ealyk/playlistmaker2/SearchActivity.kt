@@ -48,10 +48,11 @@ class SearchActivity : AppCompatActivity(), HistoryObserver {
     private lateinit var rvSearchHistory: RecyclerView
     private lateinit var clearHistory: Button
 
-    private val trackList = ArrayList<Track>()
+    private val trackList = mutableListOf<Track>()
+    private val historyList = mutableListOf<Track>()
 
     private lateinit var adapter: TrackAdapter
-    private lateinit var historyAdapter: HistoryAdapter
+    private lateinit var historyAdapter: TrackAdapter
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,15 +75,16 @@ class SearchActivity : AppCompatActivity(), HistoryObserver {
         rvSearchHistory = findViewById(R.id.recyclerSearchHistory)
         clearHistory = findViewById(R.id.clear_history_button)
 
-        searchHistory.addObserver(this)
-
-        val historyList = searchHistory.loadHistory().toMutableList()
-
-        adapter = TrackAdapter(trackList, searchHistory)
-        historyAdapter = HistoryAdapter(historyList)
+        adapter = TrackAdapter(trackList, sharedPreferences, isHistory = false)
+        historyAdapter = TrackAdapter(historyList, sharedPreferences, isHistory = true)
 
         rvSearchHistory.adapter = historyAdapter
         rvTrackSearch.adapter = adapter
+
+        searchHistory.addObserver(this)
+        historyList.addAll(searchHistory.loadHistory().toMutableList())
+        historyAdapter.notifyDataSetChanged()
+        clearHistory.visibility = if (historyList.isEmpty()) View.GONE else View.VISIBLE
 
         if (savedInstanceState != null) {
             savedEditText = savedInstanceState.getString(EDITABLE_TEXT, DEF_TEXT)
@@ -102,6 +104,7 @@ class SearchActivity : AppCompatActivity(), HistoryObserver {
             val updateHistoryList = searchHistory.loadHistory().toMutableList()
 
             historyAdapter.updateList(updateHistoryList)
+            clearHistory.visibility = if (historyList.isEmpty()) View.GONE else View.VISIBLE
             adapter.notifyDataSetChanged()
 
             showTrackList(emptyStateLayout, errorStateLayout, rvTrackSearch)
@@ -114,6 +117,7 @@ class SearchActivity : AppCompatActivity(), HistoryObserver {
             onHistoryUpdate(historyList)
             historyAdapter.notifyDataSetChanged()
         }
+
 
 
         editTextSearch.setOnFocusChangeListener { view, hasFocus ->
@@ -250,7 +254,10 @@ class SearchActivity : AppCompatActivity(), HistoryObserver {
 
     override fun onHistoryUpdate(historyList: List<Track>) {
         historyAdapter.updateList(historyList)
+        clearHistory.visibility = if (historyList.isEmpty()) View.GONE else View.VISIBLE
+
     }
+
 
     override fun onDestroy() {
         super.onDestroy()

@@ -1,11 +1,13 @@
 package com.ealyk.playlistmaker2
 
+import android.content.SharedPreferences
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
 class TrackAdapter(
-    private val trackList: List<Track>,
-    private val searchHistory: SearchHistory
+    private val trackList: MutableList<Track>,
+    private val sharedPreferences: SharedPreferences,
+    private val isHistory: Boolean = false
 ): RecyclerView.Adapter<TrackViewHolder>() {
 
 
@@ -22,10 +24,17 @@ class TrackAdapter(
         holder.bind(trackList[position])
         holder.itemView.setOnClickListener {
             val track = trackList[position]
-            searchHistory.addTrackHistory(track)
+            if (!isHistory) {
+                SearchHistory(sharedPreferences).addTrackHistory(track)
+            }
 
         }
     }
 
+    fun updateList(newList: List<Track>) {
+        trackList.clear()
+        trackList.addAll(newList)
+        notifyDataSetChanged()
+    }
 
 }
