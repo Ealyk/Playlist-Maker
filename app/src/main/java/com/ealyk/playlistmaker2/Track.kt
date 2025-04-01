@@ -14,3 +14,4 @@ data class Track(
     val formatedTime: String
         get() = SimpleDateFormat("mm:ss", Locale.getDefault()).format(trackTime)
 }
+

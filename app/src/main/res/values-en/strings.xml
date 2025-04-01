@@ -12,5 +12,7 @@
     <string name="nothing_founded">Nothing founded</string>
     <string name="communication_error">Communication problems\n\nThe upload failed. Please check\nyour internet connection</string>
     <string name="reload_button">Reload</string>
+    <string name="searched">You searched</string>
+    <string name="clear_history">Clear history</string>
 
 </resources>
