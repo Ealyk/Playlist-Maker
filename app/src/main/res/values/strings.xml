@@ -23,5 +23,10 @@
     <string name="reload_button">Обновить</string>
     <string name="searched">Вы искали</string>
     <string name="clear_history">Очистить историю</string>
+    <string name="country">Страна</string>
+    <string name="genre">Жанр</string>
+    <string name="year">Год</string>
+    <string name="album">Альбом</string>
+    <string name="trackTime">Длительность</string>
 
 </resources>

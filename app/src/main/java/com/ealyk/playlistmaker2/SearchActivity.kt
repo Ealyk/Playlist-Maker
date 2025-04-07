@@ -75,8 +75,8 @@ class SearchActivity : AppCompatActivity(), HistoryObserver {
         rvSearchHistory = findViewById(R.id.recyclerSearchHistory)
         clearHistory = findViewById(R.id.clear_history_button)
 
-        adapter = TrackAdapter(trackList, sharedPreferences, isHistory = false)
-        historyAdapter = TrackAdapter(historyList, sharedPreferences, isHistory = true)
+        adapter = TrackAdapter(trackList, sharedPreferences, isHistory = false, this)
+        historyAdapter = TrackAdapter(historyList, sharedPreferences, isHistory = true, this)
 
         rvSearchHistory.adapter = historyAdapter
         rvTrackSearch.adapter = adapter
