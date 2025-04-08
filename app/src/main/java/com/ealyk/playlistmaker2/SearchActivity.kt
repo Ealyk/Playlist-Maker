@@ -15,6 +15,10 @@ import android.widget.FrameLayout
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.ealyk.playlistmaker2.Constants.DEF_TEXT
+import com.ealyk.playlistmaker2.Constants.EDITABLE_TEXT
+import com.ealyk.playlistmaker2.Constants.SHARED_PREF_KEY
+import com.ealyk.playlistmaker2.Constants.iTunesbaseUrl
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -59,7 +63,7 @@ class SearchActivity : AppCompatActivity(), HistoryObserver {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
-        sharedPreferences = getSharedPreferences(App.SHARED_PREF_KEY, MODE_PRIVATE)
+        sharedPreferences = getSharedPreferences(SHARED_PREF_KEY, MODE_PRIVATE)
         searchHistory = SearchHistory(sharedPreferences)
 
 
@@ -84,7 +88,7 @@ class SearchActivity : AppCompatActivity(), HistoryObserver {
         searchHistory.addObserver(this)
         historyList.addAll(searchHistory.loadHistory().toMutableList())
         historyAdapter.notifyDataSetChanged()
-        clearHistory.visibility = if (historyList.isEmpty()) View.GONE else View.VISIBLE
+        historyLayout.visibility = if (historyList.isEmpty()) View.GONE else View.VISIBLE
 
         if (savedInstanceState != null) {
             savedEditText = savedInstanceState.getString(EDITABLE_TEXT, DEF_TEXT)
@@ -104,7 +108,7 @@ class SearchActivity : AppCompatActivity(), HistoryObserver {
             val updateHistoryList = searchHistory.loadHistory().toMutableList()
 
             historyAdapter.updateList(updateHistoryList)
-            clearHistory.visibility = if (historyList.isEmpty()) View.GONE else View.VISIBLE
+            historyLayout.visibility = if (historyList.isEmpty()) View.GONE else View.VISIBLE
             adapter.notifyDataSetChanged()
 
             showTrackList(emptyStateLayout, errorStateLayout, rvTrackSearch)
@@ -121,7 +125,7 @@ class SearchActivity : AppCompatActivity(), HistoryObserver {
 
 
         editTextSearch.setOnFocusChangeListener { view, hasFocus ->
-            historyLayout.visibility = if (hasFocus && editTextSearch.text.isEmpty()) View.VISIBLE else View.GONE
+            historyLayout.visibility = if (hasFocus && editTextSearch.text.isEmpty()) View.GONE else View.VISIBLE
         }
 
         val textWatcher = object : TextWatcher {
@@ -254,7 +258,7 @@ class SearchActivity : AppCompatActivity(), HistoryObserver {
 
     override fun onHistoryUpdate(historyList: List<Track>) {
         historyAdapter.updateList(historyList)
-        clearHistory.visibility = if (historyList.isEmpty()) View.GONE else View.VISIBLE
+        historyLayout.visibility = if (historyList.isEmpty()) View.GONE else View.VISIBLE
 
     }
 
@@ -264,10 +268,5 @@ class SearchActivity : AppCompatActivity(), HistoryObserver {
         searchHistory.removeObserver(this)
     }
 
-    companion object {
-        private const val iTunesbaseUrl = "https://itunes.apple.com"
-        private const val EDITABLE_TEXT = "EDITABLE_TEXT"
-        private const val DEF_TEXT = ""
-    }
 
 }

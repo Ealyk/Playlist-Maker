@@ -10,6 +10,9 @@ import android.widget.FrameLayout
 import android.widget.Switch
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import com.ealyk.playlistmaker2.Constants.DEF_IS_DARK
+import com.ealyk.playlistmaker2.Constants.SHARED_PREF_KEY
+import com.ealyk.playlistmaker2.Constants.SWITCH_THEME_KEY
 import com.google.android.material.switchmaterial.SwitchMaterial
 
 
@@ -25,13 +28,13 @@ class SettingsActivity : AppCompatActivity() {
 
         switch = findViewById(R.id.switch_theme)
 
-        val sharedPreferences = getSharedPreferences(App.SHARED_PREF_KEY, MODE_PRIVATE)
+        val sharedPreferences = getSharedPreferences(SHARED_PREF_KEY, MODE_PRIVATE)
 
-        switch.isChecked = sharedPreferences.getBoolean(App.SWITCH_KEY, App.DEF_IS_DARK)
+        switch.isChecked = sharedPreferences.getBoolean(SWITCH_THEME_KEY, DEF_IS_DARK)
 
         switch.setOnCheckedChangeListener { switcher, checked ->
             (applicationContext as App).switchTheme(checked)
-            sharedPreferences.edit().putBoolean(App.SWITCH_KEY, checked).apply()
+            sharedPreferences.edit().putBoolean(SWITCH_THEME_KEY, checked).apply()
         }
 
 

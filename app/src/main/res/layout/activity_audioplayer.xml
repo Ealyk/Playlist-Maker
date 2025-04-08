@@ -24,11 +24,13 @@
         />
 
 
-    <FrameLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/countryContainer"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginBottom="20dp"
         android:paddingVertical="8dp"
         >
@@ -38,7 +40,10 @@
             android:layout_height="wrap_content"
             style="@style/AudioPlayerTextStyle"
             android:text="@string/country"
-            android:layout_marginStart="16dp" />
+            android:layout_marginStart="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
         <TextView
             android:id="@+id/country"
@@ -48,15 +53,20 @@
             tools:text="Великобритания"
             style="@style/AudioPlayerTextStyle"
             android:layout_marginEnd="16dp"
-            android:textColor="@color/content_settings_text"/>
-    </FrameLayout>
+            android:textColor="@color/content_settings_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-    <FrameLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/genreNameContainer"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@id/countryContainer"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:paddingVertical="8dp"
         >
 
@@ -65,7 +75,10 @@
             android:layout_height="wrap_content"
             style="@style/AudioPlayerTextStyle"
             android:text="@string/genre"
-            android:layout_marginStart="16dp" />
+            android:layout_marginStart="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
         <TextView
             android:id="@+id/genre"
@@ -75,15 +88,20 @@
             tools:text="Rock"
             style="@style/AudioPlayerTextStyle"
             android:layout_marginEnd="16dp"
-            android:textColor="@color/content_settings_text"/>
+            android:textColor="@color/content_settings_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
-    </FrameLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <FrameLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/releaseDateContainer"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@id/genreNameContainer"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:paddingVertical="8dp"
         >
 
@@ -92,7 +110,10 @@
             android:layout_height="wrap_content"
             style="@style/AudioPlayerTextStyle"
             android:text="@string/year"
-            android:layout_marginStart="16dp" />
+            android:layout_marginStart="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
         <TextView
             android:id="@+id/releaseDate"
@@ -102,16 +123,21 @@
             tools:text="1965"
             style="@style/AudioPlayerTextStyle"
             android:layout_marginEnd="16dp"
-            android:textColor="@color/content_settings_text"/>
-    </FrameLayout>
+            android:textColor="@color/content_settings_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <FrameLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/collectionNameContainer"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@id/releaseDateContainer"
         android:paddingVertical="8dp"
         android:visibility="visible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         >
 
         <TextView
@@ -119,7 +145,10 @@
             android:layout_height="wrap_content"
             style="@style/AudioPlayerTextStyle"
             android:text="@string/album"
-            android:layout_marginStart="16dp" />
+            android:layout_marginStart="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
         <TextView
             android:id="@+id/collectionName"
@@ -129,14 +158,19 @@
             tools:text="Yesterday (Remastered 2009)"
             style="@style/AudioPlayerTextStyle"
             android:layout_marginEnd="16dp"
-            android:textColor="@color/content_settings_text"/>
-    </FrameLayout>
+            android:textColor="@color/content_settings_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <FrameLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/trackTimeContainer"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@id/collectionNameContainer"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:paddingVertical="8dp"
         >
 
@@ -145,7 +179,10 @@
             android:layout_height="wrap_content"
             style="@style/AudioPlayerTextStyle"
             android:text="@string/trackTime"
-            android:layout_marginStart="16dp" />
+            android:layout_marginStart="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
         <TextView
             android:id="@+id/trackTime"
@@ -155,8 +192,11 @@
             tools:text="5:35"
             style="@style/AudioPlayerTextStyle"
             android:layout_marginEnd="16dp"
-            android:textColor="@color/content_settings_text"/>
-    </FrameLayout>
+            android:textColor="@color/content_settings_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
         android:id="@+id/timer"
@@ -258,7 +298,7 @@
         style="@style/BackButtonStyle"
         android:layout_marginBottom="30dp"
         android:layout_marginStart="4dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/trackImage"

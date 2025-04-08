@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.ealyk.playlistmaker2.Constants.EXTRA_TRACK
 import com.google.gson.Gson
 
 class TrackAdapter(
@@ -28,7 +29,7 @@ class TrackAdapter(
             val intent = Intent(context, AudioplayerActivity::class.java)
             val track = trackList[position]
 
-            intent.putExtra("track", Gson().toJson(track))
+            intent.putExtra(EXTRA_TRACK, track)
             if (!isHistory) {
                 SearchHistory(sharedPreferences).addTrackHistory(track)
             }

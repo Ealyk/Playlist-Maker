@@ -1,6 +1,7 @@
 package com.ealyk.playlistmaker2
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -9,16 +10,19 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.google.gson.Gson
+import com.ealyk.playlistmaker2.Constants.EXTRA_TRACK
+
+
 
 class AudioplayerActivity : AppCompatActivity() {
 
     private lateinit var backButton: Button
-    private lateinit var collectionNameContainer: FrameLayout
+    private lateinit var collectionNameContainer: ConstraintLayout
     private lateinit var collectionName: TextView
     private lateinit var country: TextView
     private lateinit var primaryGenreName: TextView
@@ -42,8 +46,7 @@ class AudioplayerActivity : AppCompatActivity() {
             insets
         }
 
-        val trackJson = intent.getStringExtra("track")
-        val track =  Gson().fromJson(trackJson, Track::class.java)
+        val track =  intent.getParcelableExtra<Track>(EXTRA_TRACK)
 
 
         backButton = findViewById(R.id.back_buttonAudioplayer)
@@ -58,25 +61,25 @@ class AudioplayerActivity : AppCompatActivity() {
         trackTime = findViewById(R.id.trackTime)
         trackImage = findViewById(R.id.trackImage)
 
-        country.text = track.country
-        primaryGenreName.text = track.primaryGenreName
-        artistName.text = track.artistName
-        trackName.text = track.trackName
-        timer.text = track.formatedTime
-        releaseDate.text = track.formatRelease()
-        trackTime.text = track.formatedTime
+        country.text = track?.country ?: ""
+        primaryGenreName.text = track?.primaryGenreName ?: ""
+        artistName.text = track?.artistName ?: ""
+        trackName.text = track?.trackName ?: ""
+        timer.text = track?.formatedTime ?: ""
+        releaseDate.text = track?.formatRelease() ?: ""
+        trackTime.text = track?.formatedTime ?: ""
 
-        val trackImageUrl = track.artworkUrl100.replaceAfterLast("/","512x512bb.jpg")
+        val trackImageUrl = track?.artworkUrl100?.replaceAfterLast("/","512x512bb.jpg") ?: R.drawable.placeholder
         Glide.with(trackImage)
             .load(trackImageUrl)
             .centerCrop()
-            .transform(RoundedCorners(8))
+            .transform(RoundedCorners(8.dpToPx(this)))
             .placeholder(R.drawable.placeholder)
             .into(trackImage)
 
-        collectionNameContainer.visibility = if (track.collectionName.isEmpty()) View.GONE
+        collectionNameContainer.visibility = if (track?.collectionName.isNullOrEmpty()) View.GONE
         else {
-            collectionName.text = track.collectionName
+            collectionName.text = track!!.collectionName
             View.VISIBLE
         }
 
@@ -84,7 +87,8 @@ class AudioplayerActivity : AppCompatActivity() {
             finish()
         }
 
-
-
+    }
+    private fun Int.dpToPx(context: Context): Int {
+        return (this * context.resources.displayMetrics.density).toInt()
     }
 }

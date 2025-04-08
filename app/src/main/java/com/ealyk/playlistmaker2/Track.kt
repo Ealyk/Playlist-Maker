@@ -4,7 +4,10 @@ import com.google.gson.annotations.SerializedName
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.TimeZone
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class Track(
     val trackName: String,
     val artistName: String,
@@ -14,7 +17,7 @@ data class Track(
     val releaseDate: String,
     val primaryGenreName: String,
     val country: String
-) {
+): Parcelable {
     val formatedTime: String
         get() = SimpleDateFormat("mm:ss", Locale.getDefault()).format(trackTime)
 

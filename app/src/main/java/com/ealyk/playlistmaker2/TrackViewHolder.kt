@@ -30,4 +30,5 @@ class TrackViewHolder(parent: ViewGroup): RecyclerView.ViewHolder(
             .into(artWorkUrl)
 
     }
+
 }
