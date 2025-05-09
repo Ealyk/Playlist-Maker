@@ -1,7 +1,6 @@
 package com.ealyk.playlistmaker2
 
 import android.content.SharedPreferences
-import com.ealyk.playlistmaker2.Constants.KEY_HISTORY
 import com.google.gson.Gson
 
 
@@ -10,6 +9,10 @@ interface HistoryObserver {
 }
 
 class SearchHistory(private val sharedPreferences: SharedPreferences) {
+
+    companion object {
+        private const val KEY_HISTORY = "Key history"
+    }
 
     private var observers = mutableListOf<HistoryObserver>()
     private val gson = Gson()

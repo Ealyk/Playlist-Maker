@@ -3,11 +3,15 @@ package com.ealyk.playlistmaker2
 import android.app.Application
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate
-import com.ealyk.playlistmaker2.Constants.DEF_IS_DARK
-import com.ealyk.playlistmaker2.Constants.SHARED_PREF_KEY
-import com.ealyk.playlistmaker2.Constants.SWITCH_THEME_KEY
+
 
 class App: Application() {
+
+    companion object {
+        private const val DEF_IS_DARK = false
+        private const val SHARED_PREF_KEY = "shared key"
+        private const val SWITCH_THEME_KEY = "switch key"
+    }
 
     private var darkTheme = false
     private lateinit var sharedPreferences: SharedPreferences

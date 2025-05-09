@@ -5,8 +5,6 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.ealyk.playlistmaker2.Constants.EXTRA_TRACK
-import com.google.gson.Gson
 
 class TrackAdapter(
     private val trackList: MutableList<Track>,
@@ -14,6 +12,10 @@ class TrackAdapter(
     private val isHistory: Boolean = false,
     private val context: Context
 ): RecyclerView.Adapter<TrackViewHolder>() {
+
+    companion object {
+        private const val EXTRA_TRACK = "track"
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         return TrackViewHolder(parent)

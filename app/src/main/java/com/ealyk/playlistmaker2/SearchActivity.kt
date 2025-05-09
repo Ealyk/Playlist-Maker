@@ -15,10 +15,7 @@ import android.widget.FrameLayout
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
-import com.ealyk.playlistmaker2.Constants.DEF_TEXT
-import com.ealyk.playlistmaker2.Constants.EDITABLE_TEXT
-import com.ealyk.playlistmaker2.Constants.SHARED_PREF_KEY
-import com.ealyk.playlistmaker2.Constants.iTunesbaseUrl
+
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -27,6 +24,13 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 
 class SearchActivity : AppCompatActivity(), HistoryObserver {
+
+    companion object {
+        private const val SHARED_PREF_KEY = "shared key"
+        private const val EDITABLE_TEXT = "EDITABLE_TEXT"
+        private const val DEF_TEXT = ""
+        private const val iTunesbaseUrl = "https://itunes.apple.com"
+    }
 
     private var savedEditText = DEF_TEXT
 
@@ -102,7 +106,7 @@ class SearchActivity : AppCompatActivity(), HistoryObserver {
 
         clearButton.setOnClickListener {
 
-            editTextSearch.setText("")
+            editTextSearch.setText(DEF_TEXT)
             trackList.clear()
 
             val updateHistoryList = searchHistory.loadHistory().toMutableList()

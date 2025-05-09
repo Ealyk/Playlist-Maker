@@ -15,11 +15,15 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.ealyk.playlistmaker2.Constants.EXTRA_TRACK
 
 
 
 class AudioplayerActivity : AppCompatActivity() {
+
+    companion object {
+        private const val EXTRA_TRACK = "track"
+
+    }
 
     private lateinit var backButton: Button
     private lateinit var collectionNameContainer: ConstraintLayout

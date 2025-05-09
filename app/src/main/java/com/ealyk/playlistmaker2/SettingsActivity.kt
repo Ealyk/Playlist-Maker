@@ -7,16 +7,17 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.FrameLayout
-import android.widget.Switch
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
-import com.ealyk.playlistmaker2.Constants.DEF_IS_DARK
-import com.ealyk.playlistmaker2.Constants.SHARED_PREF_KEY
-import com.ealyk.playlistmaker2.Constants.SWITCH_THEME_KEY
 import com.google.android.material.switchmaterial.SwitchMaterial
 
 
 class SettingsActivity : AppCompatActivity() {
+
+    companion object {
+        private const val DEF_IS_DARK = false
+        private const val SWITCH_THEME_KEY = "switch key"
+        private const val SHARED_PREF_KEY = "shared key"
+    }
 
     private lateinit var switch: SwitchMaterial
 
