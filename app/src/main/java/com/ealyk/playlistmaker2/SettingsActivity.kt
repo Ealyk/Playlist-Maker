@@ -7,13 +7,17 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.FrameLayout
-import android.widget.Switch
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import com.google.android.material.switchmaterial.SwitchMaterial
 
 
 class SettingsActivity : AppCompatActivity() {
+
+    companion object {
+        private const val DEF_IS_DARK = false
+        private const val SWITCH_THEME_KEY = "switch key"
+        private const val SHARED_PREF_KEY = "shared key"
+    }
 
     private lateinit var switch: SwitchMaterial
 
@@ -25,13 +29,13 @@ class SettingsActivity : AppCompatActivity() {
 
         switch = findViewById(R.id.switch_theme)
 
-        val sharedPreferences = getSharedPreferences(App.SHARED_PREF_KEY, MODE_PRIVATE)
+        val sharedPreferences = getSharedPreferences(SHARED_PREF_KEY, MODE_PRIVATE)
 
-        switch.isChecked = sharedPreferences.getBoolean(App.SWITCH_KEY, App.DEF_IS_DARK)
+        switch.isChecked = sharedPreferences.getBoolean(SWITCH_THEME_KEY, DEF_IS_DARK)
 
         switch.setOnCheckedChangeListener { switcher, checked ->
             (applicationContext as App).switchTheme(checked)
-            sharedPreferences.edit().putBoolean(App.SWITCH_KEY, checked).apply()
+            sharedPreferences.edit().putBoolean(SWITCH_THEME_KEY, checked).apply()
         }
 
 

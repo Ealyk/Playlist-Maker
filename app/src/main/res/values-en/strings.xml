@@ -14,5 +14,10 @@
     <string name="reload_button">Reload</string>
     <string name="searched">You searched</string>
     <string name="clear_history">Clear history</string>
+    <string name="country">Country</string>
+    <string name="genre">Genre</string>
+    <string name="year">Year</string>
+    <string name="album">Track collection</string>
+    <string name="trackTime">Track time</string>
 
 </resources>
