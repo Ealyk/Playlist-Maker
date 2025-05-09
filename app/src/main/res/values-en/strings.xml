@@ -19,5 +19,6 @@
     <string name="year">Year</string>
     <string name="album">Track collection</string>
     <string name="trackTime">Track time</string>
+    <string name="notPreview">This track has not preview</string>
 
 </resources>

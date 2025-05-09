@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -13,6 +15,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 
@@ -30,9 +33,14 @@ class SearchActivity : AppCompatActivity(), HistoryObserver {
         private const val EDITABLE_TEXT = "EDITABLE_TEXT"
         private const val DEF_TEXT = ""
         private const val iTunesbaseUrl = "https://itunes.apple.com"
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
 
     private var savedEditText = DEF_TEXT
+
+    private lateinit var handler: Handler
+
+    private val searchRunnable = Runnable { performSearch(savedEditText) }
 
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var searchHistory: SearchHistory
@@ -55,6 +63,7 @@ class SearchActivity : AppCompatActivity(), HistoryObserver {
     private lateinit var historyLayout: LinearLayout
     private lateinit var rvSearchHistory: RecyclerView
     private lateinit var clearHistory: Button
+    private lateinit var progressBar: ProgressBar
 
     private val trackList = mutableListOf<Track>()
     private val historyList = mutableListOf<Track>()
@@ -82,6 +91,9 @@ class SearchActivity : AppCompatActivity(), HistoryObserver {
         historyLayout = findViewById(R.id.containerHistory)
         rvSearchHistory = findViewById(R.id.recyclerSearchHistory)
         clearHistory = findViewById(R.id.clear_history_button)
+        progressBar = findViewById(R.id.progressBar)
+
+        handler = Handler(Looper.getMainLooper())
 
         adapter = TrackAdapter(trackList, sharedPreferences, isHistory = false, this)
         historyAdapter = TrackAdapter(historyList, sharedPreferences, isHistory = true, this)
@@ -108,6 +120,7 @@ class SearchActivity : AppCompatActivity(), HistoryObserver {
 
             editTextSearch.setText(DEF_TEXT)
             trackList.clear()
+            progressBar.visibility = View.GONE
 
             val updateHistoryList = searchHistory.loadHistory().toMutableList()
 
@@ -115,7 +128,7 @@ class SearchActivity : AppCompatActivity(), HistoryObserver {
             historyLayout.visibility = if (historyList.isEmpty()) View.GONE else View.VISIBLE
             adapter.notifyDataSetChanged()
 
-            showTrackList(emptyStateLayout, errorStateLayout, rvTrackSearch)
+            showTrackList()
             val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
             inputMethodManager?.hideSoftInputFromWindow(rootLayout.windowToken, 0)
         }
@@ -139,6 +152,7 @@ class SearchActivity : AppCompatActivity(), HistoryObserver {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
 
+                searchDebounce()
                 clearButton.visibility = clearButtonVisibility(s ?: "")
                 historyLayout.visibility = if (editTextSearch.hasFocus() && s?.isEmpty() == true) {
 
@@ -164,12 +178,14 @@ class SearchActivity : AppCompatActivity(), HistoryObserver {
                 val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
                 inputMethodManager?.hideSoftInputFromWindow(rootLayout.windowToken, 0)
 
-                performSearch(savedEditText)
                 true
             } else false
         }
 
         reloadButton.setOnClickListener {
+
+            errorStateLayout.visibility = View.GONE
+            progressBar.visibility = View.VISIBLE
             performSearch(savedEditText)
         }
 
@@ -177,36 +193,37 @@ class SearchActivity : AppCompatActivity(), HistoryObserver {
 
     private fun performSearch(query: String) {
         if (editTextSearch.text.isNotEmpty()) {
+
             iTunesService.search(editTextSearch.text.toString()).enqueue(object : Callback<TrackResponse>{
                 override fun onResponse(
                     call: Call<TrackResponse>,
                     response: Response<TrackResponse>
                 ) {
-
+                    progressBar.visibility = View.GONE
                     val responseBody = response.body()?.results
 
                     if (response.code() == 200) {
                         trackList.clear()
                         if (responseBody?.isNotEmpty() == true) {
+                            showTrackList()
                             trackList.addAll(responseBody)
                             adapter.notifyDataSetChanged()
                         }
                         if (trackList.isEmpty()) {
-                            showEmptyState(emptyStateLayout, errorStateLayout, rvTrackSearch)
+                            showEmptyState()
                         }
-                        else showTrackList(emptyStateLayout, errorStateLayout, rvTrackSearch)
+                        else {
+                            showTrackList()
+                        }
                     }
                     else {
-                        showErrorState(emptyStateLayout, errorStateLayout, rvTrackSearch)
+                        showErrorState()
                     }
                 }
 
                 override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
-                    showErrorState(emptyStateLayout, errorStateLayout, rvTrackSearch)
-                    reloadButton.setOnClickListener {
-
-                        performSearch(query)
-                    }
+                    progressBar.visibility = View.GONE
+                    showErrorState()
                 }
 
             })
@@ -233,28 +250,19 @@ class SearchActivity : AppCompatActivity(), HistoryObserver {
         }
     }
 
-    private fun showEmptyState(
-        emptyStateLayout: LinearLayout,
-        errorStateLayout: LinearLayout,
-        rvTrackSearch: RecyclerView) {
+    private fun showEmptyState() {
         emptyStateLayout.visibility = View.VISIBLE
         errorStateLayout.visibility = View.GONE
         rvTrackSearch.visibility = View.GONE
     }
 
-    private fun showErrorState(
-        emptyStateLayout: LinearLayout,
-        errorStateLayout: LinearLayout,
-        rvTrackSearch: RecyclerView) {
+    private fun showErrorState() {
         emptyStateLayout.visibility = View.GONE
         errorStateLayout.visibility = View.VISIBLE
         rvTrackSearch.visibility = View.GONE
     }
 
-    private fun showTrackList(
-        emptyStateLayout: LinearLayout,
-        errorStateLayout: LinearLayout,
-        rvTrackSearch: RecyclerView) {
+    private fun showTrackList() {
         emptyStateLayout.visibility = View.GONE
         errorStateLayout.visibility = View.GONE
         rvTrackSearch.visibility = View.VISIBLE
@@ -270,6 +278,14 @@ class SearchActivity : AppCompatActivity(), HistoryObserver {
     override fun onDestroy() {
         super.onDestroy()
         searchHistory.removeObserver(this)
+    }
+
+    private fun searchDebounce() {
+        trackList.clear()
+        progressBar.visibility = View.VISIBLE
+        adapter.updateList(trackList)
+        handler.removeCallbacks(searchRunnable)
+        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
     }
 
 
