@@ -7,12 +7,6 @@ import androidx.appcompat.app.AppCompatDelegate
 
 class App: Application() {
 
-    companion object {
-        private const val DEF_IS_DARK = false
-        private const val SHARED_PREF_KEY = "shared key"
-        private const val SWITCH_THEME_KEY = "switch key"
-    }
-
     private var darkTheme = false
     private lateinit var sharedPreferences: SharedPreferences
 
@@ -29,8 +23,6 @@ class App: Application() {
 
     }
 
-
-
     fun switchTheme(darkThemeenabled: Boolean) {
         darkTheme = darkThemeenabled
         AppCompatDelegate.setDefaultNightMode(
@@ -43,9 +35,10 @@ class App: Application() {
         )
     }
 
-
-
-
-
+    companion object {
+        private const val DEF_IS_DARK = false
+        private const val SHARED_PREF_KEY = "shared key"
+        private const val SWITCH_THEME_KEY = "switch key"
+    }
 
 }

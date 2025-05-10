@@ -17,6 +17,7 @@ import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 
 import retrofit2.Call
@@ -28,13 +29,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class SearchActivity : AppCompatActivity(), HistoryObserver {
 
-    companion object {
-        private const val SHARED_PREF_KEY = "shared key"
-        private const val EDITABLE_TEXT = "EDITABLE_TEXT"
-        private const val DEF_TEXT = ""
-        private const val iTunesbaseUrl = "https://itunes.apple.com"
-        private const val SEARCH_DEBOUNCE_DELAY = 2000L
-    }
 
     private var savedEditText = DEF_TEXT
 
@@ -120,12 +114,12 @@ class SearchActivity : AppCompatActivity(), HistoryObserver {
 
             editTextSearch.setText(DEF_TEXT)
             trackList.clear()
-            progressBar.visibility = View.GONE
+            progressBar.isVisible = false
 
             val updateHistoryList = searchHistory.loadHistory().toMutableList()
 
             historyAdapter.updateList(updateHistoryList)
-            historyLayout.visibility = if (historyList.isEmpty()) View.GONE else View.VISIBLE
+            historyLayout.isVisible = if (historyList.isEmpty()) false else true
             adapter.notifyDataSetChanged()
 
             showTrackList()
@@ -142,7 +136,7 @@ class SearchActivity : AppCompatActivity(), HistoryObserver {
 
 
         editTextSearch.setOnFocusChangeListener { view, hasFocus ->
-            historyLayout.visibility = if (hasFocus && editTextSearch.text.isEmpty()) View.GONE else View.VISIBLE
+            historyLayout.isVisible = if (hasFocus && editTextSearch.text.isEmpty()) false else true
         }
 
         val textWatcher = object : TextWatcher {
@@ -154,11 +148,11 @@ class SearchActivity : AppCompatActivity(), HistoryObserver {
 
                 searchDebounce()
                 clearButton.visibility = clearButtonVisibility(s ?: "")
-                historyLayout.visibility = if (editTextSearch.hasFocus() && s?.isEmpty() == true) {
+                historyLayout.isVisible = if (editTextSearch.hasFocus() && s?.isEmpty() == true) {
 
-                    View.VISIBLE
+                    true
                 }
-                else View.GONE
+                else false
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -184,8 +178,8 @@ class SearchActivity : AppCompatActivity(), HistoryObserver {
 
         reloadButton.setOnClickListener {
 
-            errorStateLayout.visibility = View.GONE
-            progressBar.visibility = View.VISIBLE
+            errorStateLayout.isVisible = false
+            progressBar.isVisible = true
             performSearch(savedEditText)
         }
 
@@ -199,7 +193,7 @@ class SearchActivity : AppCompatActivity(), HistoryObserver {
                     call: Call<TrackResponse>,
                     response: Response<TrackResponse>
                 ) {
-                    progressBar.visibility = View.GONE
+                    progressBar.isVisible = false
                     val responseBody = response.body()?.results
 
                     if (response.code() == 200) {
@@ -210,6 +204,7 @@ class SearchActivity : AppCompatActivity(), HistoryObserver {
                             adapter.notifyDataSetChanged()
                         }
                         if (trackList.isEmpty()) {
+                            progressBar.isVisible = false
                             showEmptyState()
                         }
                         else {
@@ -222,7 +217,7 @@ class SearchActivity : AppCompatActivity(), HistoryObserver {
                 }
 
                 override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
-                    progressBar.visibility = View.GONE
+                    progressBar.isVisible = false
                     showErrorState()
                 }
 
@@ -281,11 +276,19 @@ class SearchActivity : AppCompatActivity(), HistoryObserver {
     }
 
     private fun searchDebounce() {
-        trackList.clear()
-        progressBar.visibility = View.VISIBLE
+        progressBar.isVisible = true
         adapter.updateList(trackList)
         handler.removeCallbacks(searchRunnable)
         handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+    }
+
+
+    companion object {
+        private const val SHARED_PREF_KEY = "shared key"
+        private const val EDITABLE_TEXT = "EDITABLE_TEXT"
+        private const val DEF_TEXT = ""
+        private const val iTunesbaseUrl = "https://itunes.apple.com"
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
 
 

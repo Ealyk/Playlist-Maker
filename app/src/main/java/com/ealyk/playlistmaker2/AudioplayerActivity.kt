@@ -24,19 +24,11 @@ import java.util.Locale
 
 class AudioplayerActivity : AppCompatActivity() {
 
-    companion object {
-        private const val EXTRA_TRACK = "track"
-        private const val STATE_DEFAULT = 0
-        private const val STATE_PREPARED = 1
-        private const val STATE_PLAYING = 2
-        private const val STATE_PAUSED = 3
-        private const val TIMER_TRACK_DELAY = 400L
-        private const val START_TIMER_VALUE = "00:00"
-    }
-
     private var playerState = STATE_DEFAULT
 
     private val mediaPlayer = MediaPlayer()
+
+    private val dataFormat by lazy { SimpleDateFormat("mm:ss", Locale.getDefault()) }
 
     private lateinit var handler: Handler
 
@@ -187,11 +179,21 @@ class AudioplayerActivity : AppCompatActivity() {
     private fun updateTimer(): Runnable {
         return object : Runnable {
             override fun run() {
-                timer.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(mediaPlayer.currentPosition)
+                timer.text = dataFormat.format(mediaPlayer.currentPosition)
                 handler.postDelayed(this, TIMER_TRACK_DELAY)
             }
 
         }
+    }
+
+    companion object {
+        private const val EXTRA_TRACK = "track"
+        private const val STATE_DEFAULT = 0
+        private const val STATE_PREPARED = 1
+        private const val STATE_PLAYING = 2
+        private const val STATE_PAUSED = 3
+        private const val TIMER_TRACK_DELAY = 400L
+        private const val START_TIMER_VALUE = "00:00"
     }
 
 }
