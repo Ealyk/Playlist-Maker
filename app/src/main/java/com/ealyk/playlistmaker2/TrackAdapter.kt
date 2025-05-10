@@ -13,9 +13,6 @@ class TrackAdapter(
     private val context: Context
 ): RecyclerView.Adapter<TrackViewHolder>() {
 
-    companion object {
-        private const val EXTRA_TRACK = "track"
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         return TrackViewHolder(parent)
@@ -44,6 +41,10 @@ class TrackAdapter(
         trackList.clear()
         trackList.addAll(newList)
         notifyDataSetChanged()
+    }
+
+    companion object {
+        private const val EXTRA_TRACK = "track"
     }
 
 }

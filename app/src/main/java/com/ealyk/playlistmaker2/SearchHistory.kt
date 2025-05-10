@@ -10,9 +10,6 @@ interface HistoryObserver {
 
 class SearchHistory(private val sharedPreferences: SharedPreferences) {
 
-    companion object {
-        private const val KEY_HISTORY = "Key history"
-    }
 
     private var observers = mutableListOf<HistoryObserver>()
     private val gson = Gson()
@@ -57,5 +54,8 @@ class SearchHistory(private val sharedPreferences: SharedPreferences) {
     }
 
 
+    companion object {
+        private const val KEY_HISTORY = "Key history"
+    }
 
 }

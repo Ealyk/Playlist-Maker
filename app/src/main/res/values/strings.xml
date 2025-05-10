@@ -28,5 +28,6 @@
     <string name="year">Год</string>
     <string name="album">Альбом</string>
     <string name="trackTime">Длительность</string>
+    <string name="notPreview">У этого трека нет демо версии</string>
 
 </resources>

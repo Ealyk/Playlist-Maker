@@ -13,12 +13,6 @@ import com.google.android.material.switchmaterial.SwitchMaterial
 
 class SettingsActivity : AppCompatActivity() {
 
-    companion object {
-        private const val DEF_IS_DARK = false
-        private const val SWITCH_THEME_KEY = "switch key"
-        private const val SHARED_PREF_KEY = "shared key"
-    }
-
     private lateinit var switch: SwitchMaterial
 
     @SuppressLint("MissingInflatedId", "UseSwitchCompatOrMaterialCode")
@@ -70,13 +64,15 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 
-
-
     override fun onBackPressed() {
         super.onBackPressed()
         finish()
     }
 
-
+    companion object {
+        private const val DEF_IS_DARK = false
+        private const val SWITCH_THEME_KEY = "switch key"
+        private const val SHARED_PREF_KEY = "shared key"
+    }
 
 }
