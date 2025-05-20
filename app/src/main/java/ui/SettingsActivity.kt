@@ -1,19 +1,22 @@
-package com.ealyk.playlistmaker2
+package ui
 
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
+import com.ealyk.playlistmaker2.Creator
+import com.ealyk.playlistmaker2.R
 import com.google.android.material.switchmaterial.SwitchMaterial
+import domain.api.ThemeSwitcher
 
 
 class SettingsActivity : AppCompatActivity() {
 
     private lateinit var switch: SwitchMaterial
+    private lateinit var provideThemeSwitcher: ThemeSwitcher
 
     @SuppressLint("MissingInflatedId", "UseSwitchCompatOrMaterialCode")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,14 +25,12 @@ class SettingsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_settings)
 
         switch = findViewById(R.id.switch_theme)
+        provideThemeSwitcher = Creator.provideThemeSwitcher(this)
 
-        val sharedPreferences = getSharedPreferences(SHARED_PREF_KEY, MODE_PRIVATE)
-
-        switch.isChecked = sharedPreferences.getBoolean(SWITCH_THEME_KEY, DEF_IS_DARK)
+        switch.isChecked = provideThemeSwitcher.loadTheme()
 
         switch.setOnCheckedChangeListener { switcher, checked ->
-            (applicationContext as App).switchTheme(checked)
-            sharedPreferences.edit().putBoolean(SWITCH_THEME_KEY, checked).apply()
+            provideThemeSwitcher.switchTheme(checked)
         }
 
 
@@ -69,10 +70,5 @@ class SettingsActivity : AppCompatActivity() {
         finish()
     }
 
-    companion object {
-        private const val DEF_IS_DARK = false
-        private const val SWITCH_THEME_KEY = "switch key"
-        private const val SHARED_PREF_KEY = "shared key"
-    }
 
 }

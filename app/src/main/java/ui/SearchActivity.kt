@@ -1,8 +1,7 @@
-package com.ealyk.playlistmaker2
+package ui
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -19,12 +18,13 @@ import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
-
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import com.ealyk.playlistmaker2.Creator
+import com.ealyk.playlistmaker2.R
+import presentation.TrackAdapter
+import domain.api.HistoryInteractor
+import domain.api.HistoryObserver
+import domain.api.TrackInteractor
+import domain.models.Track
 
 
 class SearchActivity : AppCompatActivity(), HistoryObserver {
@@ -34,17 +34,10 @@ class SearchActivity : AppCompatActivity(), HistoryObserver {
 
     private lateinit var handler: Handler
 
-    private val searchRunnable = Runnable { performSearch(savedEditText) }
+    private val searchRunnable = Runnable { loadTrack(savedEditText) }
 
-    private lateinit var sharedPreferences: SharedPreferences
-    private lateinit var searchHistory: SearchHistory
-
-    private val retrofit = Retrofit.Builder()
-        .baseUrl(iTunesbaseUrl)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-
-    private val iTunesService = retrofit.create(iTunesApi::class.java)
+    private lateinit var provideInteractor: TrackInteractor
+    private lateinit var searchHistory: HistoryInteractor
 
     private lateinit var backButton: Button
     private lateinit var editTextSearch: EditText
@@ -70,9 +63,6 @@ class SearchActivity : AppCompatActivity(), HistoryObserver {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
-        sharedPreferences = getSharedPreferences(SHARED_PREF_KEY, MODE_PRIVATE)
-        searchHistory = SearchHistory(sharedPreferences)
-
 
         backButton = findViewById(R.id.back_button)
         editTextSearch = findViewById(R.id.searching)
@@ -89,8 +79,11 @@ class SearchActivity : AppCompatActivity(), HistoryObserver {
 
         handler = Handler(Looper.getMainLooper())
 
-        adapter = TrackAdapter(trackList, sharedPreferences, isHistory = false, this)
-        historyAdapter = TrackAdapter(historyList, sharedPreferences, isHistory = true, this)
+        searchHistory = Creator.provideHistoryInteractor(this)
+        provideInteractor = Creator.provideTrackInteractor()
+
+        adapter = TrackAdapter(trackList, searchHistory, isHistory = false, this)
+        historyAdapter = TrackAdapter(historyList, searchHistory, isHistory = true, this)
 
         rvSearchHistory.adapter = historyAdapter
         rvTrackSearch.adapter = adapter
@@ -180,50 +173,39 @@ class SearchActivity : AppCompatActivity(), HistoryObserver {
 
             errorStateLayout.isVisible = false
             progressBar.isVisible = true
-            performSearch(savedEditText)
+            loadTrack(savedEditText)
         }
 
     }
 
-    private fun performSearch(query: String) {
+    private fun loadTrack(query: String) {
         if (editTextSearch.text.isNotEmpty()) {
+            progressBar.isVisible = true
+            provideInteractor.searchTracks(editTextSearch.text.toString(), object : TrackInteractor.TrackConsumer {
+                override fun consume(foundTracks: Result<List<Track>>) {
+                    runOnUiThread {
+                        progressBar.isVisible = false
 
-            iTunesService.search(editTextSearch.text.toString()).enqueue(object : Callback<TrackResponse>{
-                override fun onResponse(
-                    call: Call<TrackResponse>,
-                    response: Response<TrackResponse>
-                ) {
-                    progressBar.isVisible = false
-                    val responseBody = response.body()?.results
-
-                    if (response.code() == 200) {
-                        trackList.clear()
-                        if (responseBody?.isNotEmpty() == true) {
-                            showTrackList()
-                            trackList.addAll(responseBody)
-                            adapter.notifyDataSetChanged()
+                        foundTracks.onSuccess { tracks ->
+                            if (tracks.isNotEmpty()) {
+                                showTrackList()
+                                trackList.clear()
+                                trackList.addAll(tracks)
+                                adapter.notifyDataSetChanged()
+                            } else {
+                                showEmptyState()
+                            }
                         }
-                        if (trackList.isEmpty()) {
-                            progressBar.isVisible = false
-                            showEmptyState()
-                        }
-                        else {
-                            showTrackList()
+                        foundTracks.onFailure {
+                            showErrorState()
                         }
                     }
-                    else {
-                        showErrorState()
-                    }
-                }
-
-                override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
-                    progressBar.isVisible = false
-                    showErrorState()
                 }
 
             })
         }
     }
+
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
@@ -284,10 +266,9 @@ class SearchActivity : AppCompatActivity(), HistoryObserver {
 
 
     companion object {
-        private const val SHARED_PREF_KEY = "shared key"
+
         private const val EDITABLE_TEXT = "EDITABLE_TEXT"
         private const val DEF_TEXT = ""
-        private const val iTunesbaseUrl = "https://itunes.apple.com"
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
 
