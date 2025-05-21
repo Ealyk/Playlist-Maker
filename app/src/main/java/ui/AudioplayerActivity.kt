@@ -1,8 +1,7 @@
-package com.ealyk.playlistmaker2
+package ui
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -18,23 +17,22 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import java.text.SimpleDateFormat
-import java.util.Locale
+import com.ealyk.playlistmaker2.Creator
+import com.ealyk.playlistmaker2.R
+import domain.api.AudioPlayer
+import domain.models.Track
+
 
 
 class AudioplayerActivity : AppCompatActivity() {
 
     private var playerState = STATE_DEFAULT
 
-    private val mediaPlayer = MediaPlayer()
-
-    private val dataFormat by lazy { SimpleDateFormat("mm:ss", Locale.getDefault()) }
+    private lateinit var provideAudioPlayer: AudioPlayer
 
     private lateinit var handler: Handler
 
     private lateinit var trackUrl: String
-
-    private val updateRunnable = updateTimer()
 
     private lateinit var backButton: Button
     private lateinit var collectionNameContainer: ConstraintLayout
@@ -84,9 +82,9 @@ class AudioplayerActivity : AppCompatActivity() {
         primaryGenreName.text = track?.primaryGenreName ?: ""
         artistName.text = track?.artistName ?: ""
         trackName.text = track?.trackName ?: ""
-        timer.text = track?.formatedTime ?: ""
-        releaseDate.text = track?.formatRelease() ?: ""
-        trackTime.text = track?.formatedTime ?: ""
+        timer.text = track?.trackTime ?: ""
+        releaseDate.text = track?.releaseDate ?: ""
+        trackTime.text = track?.trackTime ?: ""
 
         val trackImageUrl = track?.artworkUrl100?.replaceAfterLast("/","512x512bb.jpg") ?: R.drawable.placeholder
         Glide.with(trackImage)
@@ -101,8 +99,22 @@ class AudioplayerActivity : AppCompatActivity() {
             collectionName.text = track!!.collectionName
             View.VISIBLE
         }
+        provideAudioPlayer = Creator.provideAudioPlayer(handler) { formatedTime ->
+            timer.text = formatedTime
 
-        preparePlayer()
+        }
+
+        provideAudioPlayer.prepare(
+            url = trackUrl,
+            onPrepared = {
+                playButton.isEnabled = true
+                playerState = STATE_PREPARED
+            },
+            onCompleted = {
+                playButton.setImageResource(R.drawable.play_button)
+                timer.text = START_TIMER_VALUE
+            }
+        )
         if (trackUrl.isNotEmpty()) {
             playButton.setOnClickListener {
                 playbackControl()
@@ -114,6 +126,8 @@ class AudioplayerActivity : AppCompatActivity() {
             }
         }
 
+
+
         backButton.setOnClickListener {
             finish()
         }
@@ -122,13 +136,14 @@ class AudioplayerActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        pausePlayer()
+        playButton.setImageResource(R.drawable.play_button)
+        provideAudioPlayer.pausePlayer()
+        playerState = STATE_PAUSED
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        mediaPlayer.release()
-        handler.removeCallbacks(updateRunnable)
+        provideAudioPlayer.release()
         timer.text = START_TIMER_VALUE
     }
 
@@ -136,55 +151,24 @@ class AudioplayerActivity : AppCompatActivity() {
         return (this * context.resources.displayMetrics.density).toInt()
     }
 
-    private fun preparePlayer() {
-        mediaPlayer.apply {
-            setDataSource(trackUrl)
-            prepareAsync()
-            setOnPreparedListener {
-                playButton.isEnabled = true
-                playerState = STATE_PREPARED
-            }
-            setOnCompletionListener {
-                playButton.setImageResource(R.drawable.play_button)
-                handler.removeCallbacks(updateRunnable)
-                timer.text = START_TIMER_VALUE
-            }
-        }
-    }
-
     private fun playbackControl() {
         when(playerState) {
             STATE_PLAYING -> {
-                pausePlayer()
+                provideAudioPlayer.pausePlayer()
+                playerState = STATE_PAUSED
+                playButton.setImageResource(R.drawable.play_button)
             }
             STATE_PAUSED, STATE_PREPARED -> {
-                startPlayer()
+
+                provideAudioPlayer.startPlayer()
+                playerState = STATE_PLAYING
+                playButton.setImageResource(R.drawable.pause_button)
             }
         }
     }
 
-    private fun startPlayer() {
-        mediaPlayer.start()
-        handler.post(updateRunnable)
-        playButton.setImageResource(R.drawable.pause_button)
-        playerState = STATE_PLAYING
-    }
 
-    private fun pausePlayer() {
-        mediaPlayer.pause()
-        handler.removeCallbacks(updateRunnable)
-        playButton.setImageResource(R.drawable.play_button)
-        playerState = STATE_PAUSED
-    }
-    private fun updateTimer(): Runnable {
-        return object : Runnable {
-            override fun run() {
-                timer.text = dataFormat.format(mediaPlayer.currentPosition)
-                handler.postDelayed(this, TIMER_TRACK_DELAY)
-            }
 
-        }
-    }
 
     companion object {
         private const val EXTRA_TRACK = "track"
@@ -192,7 +176,6 @@ class AudioplayerActivity : AppCompatActivity() {
         private const val STATE_PREPARED = 1
         private const val STATE_PLAYING = 2
         private const val STATE_PAUSED = 3
-        private const val TIMER_TRACK_DELAY = 400L
         private const val START_TIMER_VALUE = "00:00"
     }
 
