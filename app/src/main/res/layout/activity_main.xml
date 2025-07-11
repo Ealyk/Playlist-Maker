@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/activity_main_background"
-    tools:context="ui.MainActivity"
+    tools:context="playlist.main.ui.activity.MainActivity"
         >
     <LinearLayout
         android:layout_width="match_parent"
