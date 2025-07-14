@@ -1,9 +1,9 @@
 package playlist.history.domain
-import playlist.search.domain.model.Track
+import playlist.search.ui.model.TrackUi
 
 interface HistoryRepository {
 
-    fun loadHistory(): List<Track>
+    fun loadHistory(): List<TrackUi>
 
-    fun saveHistory(historyList: List<Track>)
+    fun saveHistory(historyList: List<TrackUi>)
 }

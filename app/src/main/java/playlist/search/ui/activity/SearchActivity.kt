@@ -22,8 +22,6 @@ import playlist.search.ui.view_model.SearchViewModel
 
 class SearchActivity : AppCompatActivity() {
 
-
-
     private lateinit var handler: Handler
     private lateinit var binding: ActivitySearchBinding
     private var viewModel: SearchViewModel? = null
@@ -63,7 +61,6 @@ class SearchActivity : AppCompatActivity() {
         binding.recyclerSearchHistory.adapter = historyAdapter
         binding.recyclerTrackSearch.adapter = adapter
 
-
         binding.backButton.setOnClickListener {
             finish()
         }
@@ -86,7 +83,7 @@ class SearchActivity : AppCompatActivity() {
 
 
         binding.searching.setOnFocusChangeListener { view, hasFocus ->
-            if (hasFocus && binding.searching.text.isEmpty() && historyAdapter.trackList.isNotEmpty()) showHistoryList()
+            if (hasFocus && binding.searching.text.isEmpty() && historyAdapter.trackUiList.isNotEmpty()) showHistoryList()
         }
 
         val textWatcher = object : TextWatcher {
@@ -129,15 +126,6 @@ class SearchActivity : AppCompatActivity() {
         viewModel?.observeStateSearching()?.observe(this) {
             render(it)
         }
-        viewModel?.observeTrackList()?.observe(this) { tracks ->
-            adapter.updateList(tracks)
-        }
-
-        viewModel?.observeHistory()?.observe(this) { history ->
-
-            historyAdapter.updateList(history)
-            binding.containerHistory.isVisible = history.isNotEmpty()
-        }
 
     }
 
@@ -154,20 +142,17 @@ class SearchActivity : AppCompatActivity() {
     private fun render(state: TrackSearchState) {
         when(state) {
             is TrackSearchState.Loading -> showLoading()
-            is TrackSearchState.Content -> showTrackList()
+            is TrackSearchState.Content -> {
+                adapter.updateList(state.data)
+                showTrackList()
+            }
             is TrackSearchState.Error -> showErrorState()
             is TrackSearchState.Empty -> showEmptyState()
-            is TrackSearchState.History -> showHistoryList()
-            is TrackSearchState.Default -> showDefaultState()
+            is TrackSearchState.History -> {
+                historyAdapter.updateList(state.history)
+                showHistoryList()
+            }
         }
-    }
-
-    private fun showDefaultState() {
-        binding.emptyStateLayout.isVisible = false
-        binding.errorStateLayout.isVisible = false
-        binding.recyclerTrackSearch.isVisible = false
-        binding.progressBar.isVisible = false
-        binding.containerHistory.isVisible = false
     }
 
     private fun showHistoryList() {
@@ -175,7 +160,7 @@ class SearchActivity : AppCompatActivity() {
         binding.errorStateLayout.isVisible = false
         binding.recyclerTrackSearch.isVisible = false
         binding.progressBar.isVisible = false
-        binding.containerHistory.isVisible = true
+        binding.containerHistory.isVisible = (historyAdapter.trackUiList).isNotEmpty()
     }
 
     private fun showEmptyState() {

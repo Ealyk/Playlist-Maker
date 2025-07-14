@@ -1,6 +1,10 @@
-package playlist.search.domain.model
+package playlist.search.ui.model
 
-data class Track(
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
+data class TrackUi(
     val trackName: String,
     val artistName: String,
     val trackTime: String,
@@ -10,4 +14,7 @@ data class Track(
     val primaryGenreName: String,
     val country: String,
     val previewUrl: String?
-)
+): Parcelable {
+
+}
+

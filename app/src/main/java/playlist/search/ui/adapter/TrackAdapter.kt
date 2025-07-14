@@ -6,15 +6,15 @@ import android.os.Handler
 import android.os.Looper
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import playlist.search.domain.model.Track
+import playlist.search.ui.model.TrackUi
 import playlist.player.ui.activity.AudioplayerActivity
 
 class TrackAdapter(
-    private val onTrackClicked: (Track) -> Unit,
+    private val onTrackClicked: (TrackUi) -> Unit,
     private val context: Context
 ): RecyclerView.Adapter<TrackViewHolder>() {
 
-    val trackList: MutableList<Track> = mutableListOf()
+    val trackUiList: MutableList<TrackUi> = mutableListOf()
     private val handler = Handler(Looper.getMainLooper())
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
@@ -22,11 +22,11 @@ class TrackAdapter(
     }
 
     override fun getItemCount(): Int {
-        return trackList.size
+        return trackUiList.size
     }
 
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
-        val track = trackList[position]
+        val track = trackUiList[position]
         holder.bind(track)
         holder.itemView.setOnClickListener {
             val intent = Intent(context, AudioplayerActivity::class.java)
@@ -38,15 +38,15 @@ class TrackAdapter(
         }
     }
 
-    fun updateList(newList: List<Track>) {
-        trackList.clear()
-        trackList.addAll(newList)
+    fun updateList(newList: List<TrackUi>) {
+        trackUiList.clear()
+        trackUiList.addAll(newList)
         notifyDataSetChanged()
     }
 
     companion object {
         private const val EXTRA_TRACK = "track"
-        private const val DELAY_HISTORY_UPDATE = 500L
+        private const val DELAY_HISTORY_UPDATE = 2000L
     }
 
 }

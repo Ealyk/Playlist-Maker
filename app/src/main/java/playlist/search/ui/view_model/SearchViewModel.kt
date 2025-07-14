@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import playlist.creator.Creator
 import playlist.search.domain.TrackInteractor
-import playlist.search.domain.model.Track
+import playlist.search.ui.model.TrackUi
 import playlist.search.domain.model.TrackSearchState
 
 class SearchViewModel: ViewModel() {
@@ -14,24 +14,18 @@ class SearchViewModel: ViewModel() {
     private val searchingStateLiveData = MutableLiveData<TrackSearchState>()
     fun observeStateSearching(): LiveData<TrackSearchState> = searchingStateLiveData
 
-    private val trackListLiveData = MutableLiveData<List<Track>>()
-    fun observeTrackList(): LiveData<List<Track>> = trackListLiveData
-
-    private val historyLiveData = MutableLiveData<List<Track>>()
-    fun observeHistory(): LiveData<List<Track>> = historyLiveData
-
     private val provideInteractor = Creator.provideTrackInteractor()
     private val searchHistory = Creator.provideHistoryInteractor()
 
 
     init {
-        historyLiveData.value = searchHistory.loadHistory()
+        searchingStateLiveData.postValue(TrackSearchState.History(searchHistory.loadHistory()))
     }
 
-    fun onTrackClicked(track: Track) {
+    fun onTrackClicked(trackUi: TrackUi) {
 
-        searchHistory.addTrackHistory(track)
-        historyLiveData.value = searchHistory.loadHistory()
+        searchHistory.addTrackHistory(trackUi)
+        searchingStateLiveData.postValue(TrackSearchState.History(searchHistory.loadHistory()))
 
     }
 
@@ -39,10 +33,9 @@ class SearchViewModel: ViewModel() {
         if (query.isNotBlank()) {
             searchingStateLiveData.postValue(TrackSearchState.Loading)
             provideInteractor.searchTracks(query, object : TrackInteractor.TrackConsumer {
-                override fun consume(foundTracks: Result<List<Track>>) {
+                override fun consume(foundTracks: Result<List<TrackUi>>) {
                         foundTracks.onSuccess { tracks ->
                             if (tracks.isNotEmpty()) {
-                                trackListLiveData.postValue(tracks)
                                 searchingStateLiveData.postValue(TrackSearchState.Content(tracks))
                             } else {
                                 searchingStateLiveData.postValue(TrackSearchState.Empty())
@@ -60,14 +53,11 @@ class SearchViewModel: ViewModel() {
 
     fun clearHistory() {
         searchHistory.clearHistory()
-        historyLiveData.value = emptyList()
+        searchingStateLiveData.postValue(TrackSearchState.History(emptyList()))
     }
 
     fun clearSearch() {
-        trackListLiveData.value = emptyList()
-        searchingStateLiveData.value = if (searchHistory.loadHistory().isNotEmpty()) {
-            TrackSearchState.History(searchHistory.loadHistory())
-        } else TrackSearchState.Default
+        searchingStateLiveData.value = TrackSearchState.History(searchHistory.loadHistory())
 
     }
 }

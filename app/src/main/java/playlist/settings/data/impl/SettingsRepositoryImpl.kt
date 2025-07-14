@@ -1,14 +1,13 @@
 package playlist.settings.data.impl
 
-import android.content.Context
 
+import android.content.SharedPreferences
 import playlist.settings.domain.SettingsRepository
 import playlist.settings.domain.model.ThemeSettings
 
 
-class SettingsRepositoryImpl(private val context: Context): SettingsRepository {
+class SettingsRepositoryImpl(private val sharedPreferences: SharedPreferences): SettingsRepository {
 
-    private val sharedPreferences = context.getSharedPreferences(SHARED_PREF_KEY, Context.MODE_PRIVATE)
 
 
     override fun getThemeSettings(): ThemeSettings {
@@ -23,7 +22,6 @@ class SettingsRepositoryImpl(private val context: Context): SettingsRepository {
     }
 
     companion object {
-        private const val SHARED_PREF_KEY = "shared key"
         private const val SWITCH_THEME_KEY = "switch key"
     }
 

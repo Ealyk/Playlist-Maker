@@ -7,11 +7,11 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.ealyk.playlistmaker2.R
 import com.ealyk.playlistmaker2.databinding.TrackCardBinding
-import playlist.search.domain.model.Track
+import playlist.search.ui.model.TrackUi
 
 class TrackViewHolder(private val binding: TrackCardBinding): RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(model: Track) {
+    fun bind(model: TrackUi) {
         binding.trackCardName.text = model.trackName
         binding.trackCardNameArtist.text = model.artistName
         binding.trackCardTime.text = model.trackTime

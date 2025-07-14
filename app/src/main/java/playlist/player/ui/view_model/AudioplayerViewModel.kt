@@ -13,14 +13,17 @@ class AudioplayerViewModel: ViewModel() {
 
     private val handler = Handler(Looper.getMainLooper())
 
-    private val playerStateLiveData = MutableLiveData<PlayerState>(PlayerState.Default)
+    private val playerStateLiveData = MutableLiveData<PlayerState>(PlayerState.Default())
     fun observeState(): LiveData<PlayerState> = playerStateLiveData
 
-    private val timerLiveData = MutableLiveData(START_TIMER_VALUE)
-    fun observeTimer(): LiveData<String> = timerLiveData
 
-    private val audioPlayer = Creator.provideAudioPlayer(handler) { formatedTime ->
-        timerLiveData.postValue(formatedTime)
+    private val audioPlayer = Creator.provideAudioPlayer(handler) { formattedTime ->
+        val currentState = playerStateLiveData.value
+        when(currentState) {
+            is PlayerState.Playing -> playerStateLiveData.postValue(PlayerState.Playing(formattedTime))
+            is PlayerState.Paused -> playerStateLiveData.postValue(PlayerState.Paused(formattedTime))
+            else -> Unit
+        }
     }
 
 
@@ -28,23 +31,29 @@ class AudioplayerViewModel: ViewModel() {
         audioPlayer.prepare(
             url = url,
             onPrepared = {
-                playerStateLiveData.value = PlayerState.Prepared
+                playerStateLiveData.value = PlayerState.Prepared()
             },
             onCompleted = {
-                timerLiveData.value = START_TIMER_VALUE
-                playerStateLiveData.value = PlayerState.Prepared
+                playerStateLiveData.value = PlayerState.Prepared()
             }
         )
     }
 
     fun play() {
         audioPlayer.startPlayer()
-        playerStateLiveData.value = PlayerState.Playing
+        val lastTime = when (val state = playerStateLiveData.value) {
+            is PlayerState.Paused -> state.currentTime
+            is PlayerState.Prepared -> state.currentTime
+            else -> START_TIMER_VALUE
+        }
+        playerStateLiveData.postValue(PlayerState.Playing(lastTime))
     }
+
 
     fun pause() {
         audioPlayer.pausePlayer()
-        playerStateLiveData.value = PlayerState.Paused
+        val currentTime = (playerStateLiveData.value as? PlayerState.Playing)?.currentTime ?: START_TIMER_VALUE
+        playerStateLiveData.value = PlayerState.Paused(currentTime)
     }
 
     fun release() {
@@ -59,13 +68,9 @@ class AudioplayerViewModel: ViewModel() {
         }
     }
 
-    fun updateTimer(time: String) {
-        timerLiveData.value = time
-    }
-
 
     companion object {
         private const val START_TIMER_VALUE = "00:00"
-
     }
+
 }

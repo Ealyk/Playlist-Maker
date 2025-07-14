@@ -1,6 +1,7 @@
 package playlist.creator
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Handler
 import playlist.player.data.AudioPlayerImpl
 import playlist.history.data.HistoryRepositoryImpl
@@ -12,7 +13,7 @@ import playlist.history.domain.HistoryRepository
 import playlist.search.domain.TrackInteractor
 import playlist.search.domain.TrackRepository
 import playlist.history.domain.impl.HistoryInteractorImpl
-import playlist.search.domain.impl.TrackInteractorImpl
+import playlist.search.data.TrackInteractorImpl
 import playlist.settings.data.impl.SettingsRepositoryImpl
 import playlist.settings.domain.Impl.SettingsInteractorImpl
 import playlist.settings.domain.Impl.ThemeClientImpl
@@ -26,10 +27,12 @@ import playlist.sharing.domain.impl.SharingInteractorImpl
 object Creator {
 
     private lateinit var appContext: Context
+    private lateinit var sharedPreferences: SharedPreferences
 
 
     fun init(context: Context) {
         appContext = context.applicationContext
+        sharedPreferences = appContext.getSharedPreferences("shared key", Context.MODE_PRIVATE)
     }
 
     private fun getTrackRepository(): TrackRepository {
@@ -37,7 +40,7 @@ object Creator {
     }
 
     private val getHistoryRepository: HistoryRepository by lazy {
-        HistoryRepositoryImpl(appContext)
+        HistoryRepositoryImpl(sharedPreferences)
     }
 
     fun provideHistoryInteractor(): HistoryInteractor {
@@ -53,7 +56,7 @@ object Creator {
     }
 
     private val settingsRepository: SettingsRepository by lazy {
-        SettingsRepositoryImpl(appContext)
+        SettingsRepositoryImpl(sharedPreferences)
     }
 
     fun provideSettingsInteractor(): SettingsInteractor {
@@ -67,5 +70,6 @@ object Creator {
     fun provideSharingInteractor(): SharingInteractor {
         return SharingInteractorImpl(context = appContext, externalNavigator = getExternalNavigator)
     }
+
 
 }

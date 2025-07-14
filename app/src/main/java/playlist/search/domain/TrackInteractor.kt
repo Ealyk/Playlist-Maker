@@ -1,6 +1,6 @@
 package playlist.search.domain
 
-import playlist.search.domain.model.Track
+import playlist.search.ui.model.TrackUi
 
 interface TrackInteractor {
 
@@ -8,6 +8,6 @@ interface TrackInteractor {
 
 
     interface TrackConsumer {
-        fun consume(foundTracks: Result<List<Track>>)
+        fun consume(foundTracks: Result<List<TrackUi>>)
     }
 }
