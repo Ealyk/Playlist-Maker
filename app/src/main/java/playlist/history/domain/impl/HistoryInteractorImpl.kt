@@ -2,25 +2,25 @@ package playlist.history.domain.impl
 
 import playlist.history.domain.HistoryInteractor
 import playlist.history.domain.HistoryRepository
-import playlist.search.ui.model.TrackUi
+import playlist.search.domain.model.Track
 
 class HistoryInteractorImpl(private val repository: HistoryRepository): HistoryInteractor  {
 
 
 
-    override fun loadHistory(): List<TrackUi> {
+    override fun loadHistory(): List<Track> {
         return repository.loadHistory()
     }
 
-    override fun addTrackHistory(trackUi: TrackUi) {
+    override fun addTrackHistory(track: Track) {
 
         val historyList = repository.loadHistory().toMutableList()
-        historyList.remove(trackUi)
+        historyList.remove(track)
 
         if (historyList.size >= 10) {
             historyList.removeAt(historyList.lastIndex)
         }
-        historyList.add(0, trackUi)
+        historyList.add(0, track)
         repository.saveHistory(historyList)
 
     }

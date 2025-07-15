@@ -1,13 +1,14 @@
 package playlist.search.ui.view_model
 
-
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import playlist.creator.Creator
 import playlist.search.domain.TrackInteractor
+import playlist.search.domain.model.Track
 import playlist.search.ui.model.TrackUi
 import playlist.search.domain.model.TrackSearchState
+import playlist.search.ui.TrackMapper
 
 class SearchViewModel: ViewModel() {
 
@@ -19,13 +20,14 @@ class SearchViewModel: ViewModel() {
 
 
     init {
-        searchingStateLiveData.postValue(TrackSearchState.History(searchHistory.loadHistory()))
+        searchingStateLiveData.postValue(TrackSearchState.History(searchHistory.loadHistory().map { TrackMapper.toUi(it) }))
     }
 
     fun onTrackClicked(trackUi: TrackUi) {
 
-        searchHistory.addTrackHistory(trackUi)
-        searchingStateLiveData.postValue(TrackSearchState.History(searchHistory.loadHistory()))
+        searchHistory.addTrackHistory(TrackMapper.toDomain(trackUi))
+
+        searchingStateLiveData.postValue(TrackSearchState.History(searchHistory.loadHistory().map { TrackMapper.toUi(it) }))
 
     }
 
@@ -33,10 +35,10 @@ class SearchViewModel: ViewModel() {
         if (query.isNotBlank()) {
             searchingStateLiveData.postValue(TrackSearchState.Loading)
             provideInteractor.searchTracks(query, object : TrackInteractor.TrackConsumer {
-                override fun consume(foundTracks: Result<List<TrackUi>>) {
+                override fun consume(foundTracks: Result<List<Track>>) {
                         foundTracks.onSuccess { tracks ->
                             if (tracks.isNotEmpty()) {
-                                searchingStateLiveData.postValue(TrackSearchState.Content(tracks))
+                                searchingStateLiveData.postValue(TrackSearchState.Content(tracks.map { TrackMapper.toUi(it) }))
                             } else {
                                 searchingStateLiveData.postValue(TrackSearchState.Empty())
                             }
@@ -57,7 +59,8 @@ class SearchViewModel: ViewModel() {
     }
 
     fun clearSearch() {
-        searchingStateLiveData.value = TrackSearchState.History(searchHistory.loadHistory())
+        searchingStateLiveData.value = TrackSearchState.History(searchHistory.loadHistory().map { TrackMapper.toUi(it) })
 
     }
+
 }

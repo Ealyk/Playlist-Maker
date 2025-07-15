@@ -13,7 +13,7 @@ import playlist.history.domain.HistoryRepository
 import playlist.search.domain.TrackInteractor
 import playlist.search.domain.TrackRepository
 import playlist.history.domain.impl.HistoryInteractorImpl
-import playlist.search.data.TrackInteractorImpl
+import playlist.search.domain.TrackInteractorImpl
 import playlist.settings.data.impl.SettingsRepositoryImpl
 import playlist.settings.domain.Impl.SettingsInteractorImpl
 import playlist.settings.domain.Impl.ThemeClientImpl

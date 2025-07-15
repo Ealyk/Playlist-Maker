@@ -1,10 +1,10 @@
 package playlist.history.domain
 
 
-import playlist.search.ui.model.TrackUi
+import playlist.search.domain.model.Track
 
 interface HistoryInteractor {
-    fun loadHistory(): List<TrackUi>
-    fun addTrackHistory(trackUi: TrackUi)
+    fun loadHistory(): List<Track>
+    fun addTrackHistory(track: Track)
     fun clearHistory()
 }

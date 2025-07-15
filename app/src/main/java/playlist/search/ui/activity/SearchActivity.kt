@@ -39,9 +39,9 @@ class SearchActivity : AppCompatActivity() {
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        viewModel = ViewModelProvider(this)[SearchViewModel::class.java]
-
         handler = Handler(Looper.getMainLooper())
+
+        viewModel = ViewModelProvider(this)[SearchViewModel::class.java]
 
 
         adapter = TrackAdapter(
