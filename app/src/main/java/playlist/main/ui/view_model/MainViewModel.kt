@@ -1,5 +1,7 @@
 package playlist.main.ui.view_model
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.initializer
@@ -7,29 +9,20 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import playlist.main.ui.NavigationClient
 
 
-class MainViewModel(
-    private val navigationClient: NavigationClient
-): ViewModel() {
+class MainViewModel(): ViewModel() {
 
-
+    private val _navigateTo = SingleLiveEvent<NavigationClient>()
+    fun navigateTo(): LiveData<NavigationClient> = _navigateTo
     fun onSearchClicked() {
-        navigationClient.onSearchClicked()
+        _navigateTo.postValue(NavigationClient.Search)
     }
 
     fun onMediaClicked() {
-        navigationClient.onMediaClicked()
+        _navigateTo.postValue(NavigationClient.Media)
     }
 
     fun onSettingsClicked() {
-        navigationClient.onSettingsClicked()
-    }
-
-    companion object {
-        fun getFactory(navigationClient: NavigationClient): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                MainViewModel(navigationClient)
-            }
-        }
+        _navigateTo.postValue(NavigationClient.Settings)
     }
 
 }

@@ -3,19 +3,17 @@ package playlist.player.ui.activity
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.ealyk.playlistmaker2.R
 import com.ealyk.playlistmaker2.databinding.ActivityAudioplayerBinding
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import playlist.search.ui.model.TrackUi
 import playlist.player.domain.model.PlayerState
 import playlist.player.ui.view_model.AudioplayerViewModel
@@ -24,9 +22,7 @@ import playlist.player.ui.view_model.AudioplayerViewModel
 class AudioplayerActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAudioplayerBinding
-    private var viewModel: AudioplayerViewModel? = null
-
-    private lateinit var handler: Handler
+    private val viewModel: AudioplayerViewModel by viewModel()
 
     private lateinit var trackUrl: String
 
@@ -51,10 +47,6 @@ class AudioplayerActivity : AppCompatActivity() {
         val trackUi =  intent.getParcelableExtra<TrackUi>(EXTRA_TRACK)
         trackUrl = trackUi?.previewUrl ?: ""
 
-        handler = Handler(Looper.getMainLooper())
-
-        viewModel = ViewModelProvider(this)[AudioplayerViewModel::class.java]
-
         binding.country.text = trackUi?.country ?: ""
         binding.genre.text = trackUi?.primaryGenreName ?: ""
         binding.nameGroup.text = trackUi?.artistName ?: ""
@@ -77,7 +69,7 @@ class AudioplayerActivity : AppCompatActivity() {
             View.VISIBLE
         }
 
-        viewModel?.observeState()?.observe(this) { state ->
+        viewModel.observeState().observe(this) { state ->
 
             when(state) {
                 is PlayerState.Prepared -> {
@@ -99,11 +91,11 @@ class AudioplayerActivity : AppCompatActivity() {
             }
         }
 
-        viewModel?.prepare(trackUrl)
+        viewModel.prepare(trackUrl)
         binding.playerIcon.isEnabled = false
         if (trackUrl.isNotEmpty()) {
             binding.playerIcon.setOnClickListener {
-                viewModel?.togglePlayback()
+                viewModel.togglePlayback()
             }
         }
         else {
@@ -122,12 +114,12 @@ class AudioplayerActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        viewModel?.pause()
+        viewModel.pause()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        viewModel?.release()
+        viewModel.release()
     }
 
     private fun Int.dpToPx(context: Context): Int {

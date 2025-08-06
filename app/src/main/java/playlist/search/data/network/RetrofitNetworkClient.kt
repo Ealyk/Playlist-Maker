@@ -3,18 +3,11 @@ package playlist.search.data.network
 import playlist.search.data.NetworkClient
 import playlist.search.data.dto.Response
 import playlist.search.data.dto.TrackSearchRequest
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
-class RetrofitNetworkClient : NetworkClient {
 
-    private val retrofit = Retrofit.Builder()
-        .baseUrl(iTunesbaseUrl)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-
-    private val iTunesService = retrofit.create(iTunesApi::class.java)
-
+class RetrofitNetworkClient(
+    private val iTunesService: iTunesApi
+) : NetworkClient {
 
     override fun doRequest(dto: Any): Response {
         if (dto is TrackSearchRequest) {
@@ -27,7 +20,4 @@ class RetrofitNetworkClient : NetworkClient {
         }
     }
 
-    companion object {
-        private const val iTunesbaseUrl = "https://itunes.apple.com"
-    }
 }

@@ -8,7 +8,7 @@ import playlist.sharing.domain.model.EmailData
 
 class SharingInteractorImpl (
     private val externalNavigator: ExternalNavigator,
-    private val context: Context
+    private val context: Context,
 ): SharingInteractor {
 
     override fun shareApp() {

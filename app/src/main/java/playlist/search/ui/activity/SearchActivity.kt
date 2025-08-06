@@ -12,9 +12,9 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.lifecycle.ViewModelProvider
 import com.ealyk.playlistmaker2.R
 import com.ealyk.playlistmaker2.databinding.ActivitySearchBinding
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import playlist.search.ui.adapter.TrackAdapter
 import playlist.search.domain.model.TrackSearchState
 import playlist.search.ui.view_model.SearchViewModel
@@ -24,9 +24,9 @@ class SearchActivity : AppCompatActivity() {
 
     private lateinit var handler: Handler
     private lateinit var binding: ActivitySearchBinding
-    private var viewModel: SearchViewModel? = null
+    private val viewModel: SearchViewModel by viewModel()
 
-    private val searchRunnable by lazy { Runnable { viewModel?.loadTrack(binding.searching.text.toString()) } }
+    private val searchRunnable by lazy { Runnable { viewModel.loadTrack(binding.searching.text.toString()) } }
 
     private lateinit var adapter: TrackAdapter
     private lateinit var historyAdapter: TrackAdapter
@@ -41,19 +41,16 @@ class SearchActivity : AppCompatActivity() {
 
         handler = Handler(Looper.getMainLooper())
 
-        viewModel = ViewModelProvider(this)[SearchViewModel::class.java]
-
-
         adapter = TrackAdapter(
             onTrackClicked = { track ->
-                viewModel?.onTrackClicked(track)
+                viewModel.onTrackClicked(track)
                 binding.searching.setText(DEF_TEXT)
                              },
             this
         )
         historyAdapter = TrackAdapter(
             onTrackClicked = { track ->
-                viewModel?.onTrackClicked(track)
+                viewModel.onTrackClicked(track)
                 binding.searching.setText(DEF_TEXT) },
             this
         )
@@ -69,7 +66,7 @@ class SearchActivity : AppCompatActivity() {
 
             handler.removeCallbacks(searchRunnable)
             binding.searching.setText(DEF_TEXT)
-            viewModel?.clearSearch()
+            viewModel.clearSearch()
             adapter.notifyDataSetChanged()
 
             val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
@@ -77,7 +74,7 @@ class SearchActivity : AppCompatActivity() {
         }
 
         binding.clearHistoryButton.setOnClickListener {
-            viewModel?.clearHistory()
+            viewModel.clearHistory()
             historyAdapter.notifyDataSetChanged()
         }
 
@@ -120,10 +117,10 @@ class SearchActivity : AppCompatActivity() {
 
         binding.reloadButton.setOnClickListener {
 
-            viewModel?.loadTrack(binding.searching.text.toString())
+            viewModel.loadTrack(binding.searching.text.toString())
         }
 
-        viewModel?.observeStateSearching()?.observe(this) {
+        viewModel.observeStateSearching().observe(this) {
             render(it)
         }
 
