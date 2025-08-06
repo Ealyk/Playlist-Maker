@@ -1,29 +1,22 @@
 package playlist.player.ui.view_model
 
 
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import playlist.creator.Creator
+import playlist.player.domain.AudioPlayer
+import playlist.player.domain.TimerUpdateListener
 import playlist.player.domain.model.PlayerState
 
-class AudioplayerViewModel: ViewModel() {
-
-    private val handler = Handler(Looper.getMainLooper())
+class AudioplayerViewModel(
+    private val audioPlayer: AudioPlayer
+): ViewModel(), TimerUpdateListener {
 
     private val playerStateLiveData = MutableLiveData<PlayerState>(PlayerState.Default())
     fun observeState(): LiveData<PlayerState> = playerStateLiveData
 
-
-    private val audioPlayer = Creator.provideAudioPlayer(handler) { formattedTime ->
-        val currentState = playerStateLiveData.value
-        when(currentState) {
-            is PlayerState.Playing -> playerStateLiveData.postValue(PlayerState.Playing(formattedTime))
-            is PlayerState.Paused -> playerStateLiveData.postValue(PlayerState.Paused(formattedTime))
-            else -> Unit
-        }
+    init {
+        audioPlayer.attachTimerListener(this)
     }
 
 
@@ -64,6 +57,15 @@ class AudioplayerViewModel: ViewModel() {
         when (playerStateLiveData.value) {
             is PlayerState.Playing -> pause()
             is PlayerState.Prepared, is PlayerState.Paused -> play()
+            else -> Unit
+        }
+    }
+
+    override fun onTimerUpdate(formatedTime: String) {
+        val currentState = playerStateLiveData.value
+        when(currentState) {
+            is PlayerState.Playing -> playerStateLiveData.postValue(PlayerState.Playing(formatedTime))
+            is PlayerState.Paused -> playerStateLiveData.postValue(PlayerState.Paused(formatedTime))
             else -> Unit
         }
     }

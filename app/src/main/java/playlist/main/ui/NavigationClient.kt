@@ -1,7 +1,7 @@
 package playlist.main.ui
 
-interface NavigationClient {
-    fun onSearchClicked()
-    fun onMediaClicked()
-    fun onSettingsClicked()
+sealed class NavigationClient {
+    object Search : NavigationClient()
+    object Media : NavigationClient()
+    object Settings : NavigationClient()
 }

@@ -12,4 +12,6 @@ interface AudioPlayer {
     fun getCurrentPosition(): Int
     fun release()
 
+    fun attachTimerListener(listener: TimerUpdateListener)
+
 }

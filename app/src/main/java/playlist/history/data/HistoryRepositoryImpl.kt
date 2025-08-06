@@ -8,9 +8,12 @@ import playlist.search.domain.model.Track
 
 
 
-class HistoryRepositoryImpl(private val sharedPreferences: SharedPreferences): HistoryRepository {
+class HistoryRepositoryImpl(
+    private val sharedPreferences: SharedPreferences,
+    private val gson: Gson
+) : HistoryRepository {
 
-    private val gson = Gson()
+
 
     override fun loadHistory(): List<Track> {
         val json = sharedPreferences.getString(KEY_HISTORY, null) ?: return listOf()

@@ -4,15 +4,16 @@ package playlist.settings.ui.view_model
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import playlist.creator.Creator
+import playlist.settings.domain.SettingsInteractor
 import playlist.settings.domain.model.ThemeSettings
+import playlist.sharing.domain.SharingInteractor
 
 
+class SettingsViewModel(
+    private val settingsInteractor: SettingsInteractor,
+    private val sharingInteractor: SharingInteractor
+): ViewModel() {
 
-class SettingsViewModel: ViewModel() {
-
-    private val settingsInteractor = Creator.provideSettingsInteractor()
-    private val sharingInteractor = Creator.provideSharingInteractor()
 
     private val themeLiveData = MutableLiveData<ThemeSettings>()
     fun observeTheme(): LiveData<ThemeSettings> = themeLiveData
