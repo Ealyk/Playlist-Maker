@@ -12,19 +12,23 @@ class SharingInteractorImpl (
 ): SharingInteractor {
 
     override fun shareApp() {
-        externalNavigator.shareLink(getShareAppLink())
+        return externalNavigator.shareLink(getShareAppLink(), shareDescription())
     }
 
     override fun openTerms() {
-        externalNavigator.openTerms(getTermsLink())
+        return externalNavigator.openTerms(getTermsLink(), termsDescription())
     }
 
     override fun openSupport() {
-        externalNavigator.openEmail(getSupportEmailData())
+        return externalNavigator.openEmail(getSupportEmailData(), supportDescription())
     }
 
     private fun getShareAppLink(): String {
         return context.getString(R.string.share_uri)
+    }
+
+    private fun shareDescription(): String {
+        return context.getString(R.string.share)
     }
 
     private fun getSupportEmailData(): EmailData {
@@ -34,9 +38,15 @@ class SharingInteractorImpl (
             messageSupport = context.getString((R.string.message_support))
         )
     }
+    private fun supportDescription(): String {
+        return context.getString(R.string.support)
+    }
 
     private fun getTermsLink(): String {
         return context.getString(R.string.agreement_uri)
+    }
+    private fun termsDescription(): String {
+        return context.getString(R.string.agreement)
     }
 
 }
