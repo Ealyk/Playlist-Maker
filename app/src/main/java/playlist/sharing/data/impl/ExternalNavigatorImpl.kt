@@ -31,10 +31,12 @@ class ExternalNavigatorImpl(private val context: Context): ExternalNavigator {
 
     override fun openEmail(email: EmailData, supportDescription: String) {
         val supportIntent = Intent(Intent.ACTION_SENDTO)
-        supportIntent.data = Uri.parse("mailto:")
-        supportIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(email.address))
-        supportIntent.putExtra(Intent.EXTRA_SUBJECT, email.subjectSupport)
-        supportIntent.putExtra(Intent.EXTRA_TEXT, email.messageSupport)
+        supportIntent.apply {
+            data = Uri.parse("mailto:")
+            putExtra(Intent.EXTRA_EMAIL, arrayOf(email.address))
+            putExtra(Intent.EXTRA_SUBJECT, email.subjectSupport)
+            putExtra(Intent.EXTRA_TEXT, email.messageSupport)
+        }
         context.startActivity(
             Intent.createChooser(supportIntent, supportDescription)
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
