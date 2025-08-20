@@ -29,5 +29,10 @@
     <string name="album">Альбом</string>
     <string name="trackTime">Длительность</string>
     <string name="notPreview">У этого трека нет демо версии</string>
+    <string name="emptyMedia">Ваша медиатека пуста</string>
+    <string name="addPlaylist">Новый плейлист</string>
+    <string name="emptyPlaylist">Вы не создали\nни одного плейлиста</string>
+    <string name="favorites_track">Избранные треки</string>
+    <string name="playlists">Плейлисты</string>
 
 </resources>

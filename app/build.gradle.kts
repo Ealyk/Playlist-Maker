@@ -52,6 +52,7 @@ dependencies {
     implementation (libs.retrofit.converter.gson)
     implementation(libs.glide)
     implementation(libs.koin)
+    implementation(libs.viewpager2)
     kapt(libs.glide.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

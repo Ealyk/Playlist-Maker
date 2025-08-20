@@ -1,10 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="playlist.media.ui.activity.MediaActivity">
+    tools:context="playlist.media.ui.activity.MediaActivity"
+    android:orientation="vertical"
+    android:background="@color/activity_background">
+    <LinearLayout
+        android:layout_margin="@dimen/header_margin"
+        android:layout_marginEnd="52dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+        <Button
+            android:id="@+id/back_button"
+            android:layout_gravity="start"
+            tools:ignore="TouchTargetSizeCheck"
+            style="@style/BackButtonStyle"
+            >
+        </Button>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/media_library"
+            android:layout_marginStart="12dp"
+            style="@style/HeaderTextStyle"
+            />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
+
+    <com.google.android.material.tabs.TabLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:tabTextColor="@color/header_content_settings"
+        android:background="@color/activity_background"
+        android:id="@+id/tabLayout"
+        app:tabMode="fixed"
+        app:tabIndicatorColor="@color/header_content_settings"/>
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/viewPager"
+        />
+
+</LinearLayout>
